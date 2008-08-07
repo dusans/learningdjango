@@ -23,19 +23,19 @@ Count=4
 
 [Project\ChildNodes\Node0\ChildNodes\Node0\ChildNodes\Node0]
 ClassName=TProjectFileNode
-FileName=D:\projekti\prviDjango\polls\__init__.py
+FileName=C:\projekti\prviDjango\polls\__init__.py
 
 [Project\ChildNodes\Node0\ChildNodes\Node0\ChildNodes\Node1]
 ClassName=TProjectFileNode
-FileName=D:\projekti\prviDjango\polls\models.py
+FileName=C:\projekti\prviDjango\polls\models.py
 
 [Project\ChildNodes\Node0\ChildNodes\Node0\ChildNodes\Node2]
 ClassName=TProjectFileNode
-FileName=D:\projekti\prviDjango\polls\urls.py
+FileName=C:\projekti\prviDjango\polls\urls.py
 
 [Project\ChildNodes\Node0\ChildNodes\Node0\ChildNodes\Node3]
 ClassName=TProjectFileNode
-FileName=D:\projekti\prviDjango\polls\views.py
+FileName=C:\projekti\prviDjango\polls\views.py
 
 [Project\ChildNodes\Node0\ChildNodes\Node1]
 ClassName=TProjectFolderNode
@@ -49,35 +49,39 @@ ClassName=TProjectFolderNode
 Name=polls
 
 [Project\ChildNodes\Node0\ChildNodes\Node1\ChildNodes\Node0\ChildNodes]
-Count=2
+Count=3
 
 [Project\ChildNodes\Node0\ChildNodes\Node1\ChildNodes\Node0\ChildNodes\Node0]
 ClassName=TProjectFileNode
-FileName=D:\projekti\templates\polls\detail.html
+FileName=C:\projekti\prviDjango\templates\polls\poll_detail.html
 
 [Project\ChildNodes\Node0\ChildNodes\Node1\ChildNodes\Node0\ChildNodes\Node1]
 ClassName=TProjectFileNode
-FileName=D:\projekti\templates\polls\index.html
+FileName=C:\projekti\prviDjango\templates\polls\poll_list.html
+
+[Project\ChildNodes\Node0\ChildNodes\Node1\ChildNodes\Node0\ChildNodes\Node2]
+ClassName=TProjectFileNode
+FileName=C:\projekti\prviDjango\templates\polls\results.html
 
 [Project\ChildNodes\Node0\ChildNodes\Node2]
 ClassName=TProjectFileNode
-FileName=D:\projekti\prviDjango\__init__.py
+FileName=C:\projekti\prviDjango\__init__.py
 
 [Project\ChildNodes\Node0\ChildNodes\Node3]
 ClassName=TProjectFileNode
-FileName=D:\projekti\prviDjango\manage.py
+FileName=C:\projekti\prviDjango\manage.py
 
 [Project\ChildNodes\Node0\ChildNodes\Node4]
 ClassName=TProjectFileNode
-FileName=D:\projekti\prviDjango\setShell.py
+FileName=C:\projekti\prviDjango\setShell.py
 
 [Project\ChildNodes\Node0\ChildNodes\Node5]
 ClassName=TProjectFileNode
-FileName=D:\projekti\prviDjango\settings.py
+FileName=C:\projekti\prviDjango\settings.py
 
 [Project\ChildNodes\Node0\ChildNodes\Node6]
 ClassName=TProjectFileNode
-FileName=D:\projekti\prviDjango\urls.py
+FileName=C:\projekti\prviDjango\urls.py
 
 [Project\ChildNodes\Node1]
 ClassName=TProjectRunConfiguationsNode

@@ -13,5 +13,6 @@ urlpatterns = patterns('',
 
     # Uncomment the next line for to enable the admin:
     (r'^admin/(.*)', admin.site.root),
+    (r'^login/(.*)', 'prviDjango.register'),
     (r'^polls/', include('prviDjango.polls.urls')),
 )
