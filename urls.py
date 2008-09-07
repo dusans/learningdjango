@@ -15,4 +15,5 @@ urlpatterns = patterns('',
     (r'^admin/(.*)', admin.site.root),
     (r'^login/(.*)', 'prviDjango.register'),
     (r'^polls/', include('prviDjango.polls.urls')),
+    (r'^lottery/', include('prviDjango.lottery.urls')),
 )

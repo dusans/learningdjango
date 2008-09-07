@@ -14,7 +14,7 @@ DATABASE_NAME = 'postgres'             # Or path to database file if using sqlit
 DATABASE_USER = 'postgres'             # Not used with sqlite3.
 DATABASE_PASSWORD = 'postgres24'         # Not used with sqlite3.
 DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
-DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
+DATABASE_PORT = '5432'             # Set to empty string for default. Not used with sqlite3.
 
 # django user: django:django24
 # Local time zone for this installation. Choices can be found here:
@@ -71,8 +71,8 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    "c:/Programi/PROGRAMIRANJE/Python/moduls/django/tests/templates",
-    "c:/projekti/prviDjango/templates",
+    "d:/Programi/PROGRAMIRANJE/Python/moduls/django/tests/templates",
+    "d:/projekti/prviDjango/templates",
 )
 
 INSTALLED_APPS = (
@@ -81,5 +81,6 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.admin',
-    'prviDjango.polls'
+    'prviDjango.polls',
+    'prviDjango.lottery',
 )
