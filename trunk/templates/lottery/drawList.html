@@ -1,0 +1,72 @@
+{% load pagination_tags %}
+<form id="form1" name="form1" action="/lottery/drawList/" method="POST">
+<table border="1" align="center" cellpadding="3" cellspacing="0" bordercolor="#FFFFFF" aligh="center">
+  <tr align="center">
+	<td>
+        <a href="/lottery/home/" class="style1">Home</a>
+        <a href="/lottery/drawList/" class="style1">Now</a>
+        <a href="/lottery/history/1/" class="style1">History</a>
+        <a href="/lottery/refresh/" class="style1">Refresh</a>
+        <a href="/lottery/lucky" class="style1">My lucky</a>
+    </td>
+  </tr>
+  <tr>
+	<td align="center">
+        From: {{ form.from_date }}
+		Till: {{ form.till_date }}
+		Is drawen? {{ form.is_drawen }}
+    </td>
+  </tr>
+  <tr align="center">
+	<td>
+		Numbers: {{ form.numbers }}
+		Logical and? {{ form.logical_and }}
+    </td>
+  </tr>
+  <tr align="center">
+	<td>
+        <input type="Submit" value="Submit"></td>
+
+  </tr>
+</table>
+</form>
+
+<div align="center" id="vsebina">
+<table border="1" align="center" cellpadding="3" cellspacing="0" bordercolor="#FFFFFF">
+<tr>
+    <th><b>Round</b></th>
+    <th><b>Date</b></th>
+    <th><b>Numbers</b></th>
+    <th><b>Num 7</b></th>
+    <th><b>Value</b></th>
+    <th><b>State</b></th>
+</tr>
+{# autopaginate draws #}
+
+{% for draw in draws %}
+<tr>
+    <td> {{ draw.round_number }}</td>
+    <td> {{ draw.date }}</td>
+    <td> {{ draw.numbers_list }}</td>
+    <td> {{ draw.extra_number }}</td>
+    <td> {{ draw.value }}</td>
+    <td> {{ draw.town }}</td>
+</tr>
+{% endfor %}
+</table>
+
+
+<style type="text/css">
+    <!--
+    body {
+        background-color: #3779AF;
+    }
+    body,td,th {
+        font-family: Verdana, Arial, Helvetica, sans-serif;
+        font-size: 12px;
+        color: #FFDB4C;
+}
+.style1 {color: #FFFFFF}
+.style2 {font-size: 10px;}
+-->
+</style>
