@@ -4,6 +4,7 @@ from django import forms
 from django.shortcuts import render_to_response
 from django.http import HttpResponse
 from prviDjango.lottery.models import Draw
+from django.core.paginator import Paginator
 
 class FilterDraw(forms.Form):
     from_date = forms.DateField()
@@ -34,3 +35,13 @@ def drawList(req):
         form = FilterDraw({'from_date':datetime.date(2007, 1, 1), 'till_date':datetime.date.today(), 'is_drawen':0, 'logical_and':1})
         draws = Draw.objects.all()
         return render_to_response('lottery/drawList.html', {'form': form, 'draws': draws})
+
+def history(req, page_number):
+    draws = Draw.objects.all()
+    p = Paginator(draws, 20)
+    if int(page_number) in p.page_range:
+        return render_to_response('lottery/history.html', { 'draws': p.page(page_number).object_list,
+                                                            'pages': p.num_pages,
+                                                            'page_number': int(page_number)})
+    else:
+        return HttpResponse("Noup not gona happen %s" % page_number)
