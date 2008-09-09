@@ -14,7 +14,7 @@ class Draw(models.Model):
     user = models.ForeignKey(User)
 
     def __unicode__(self):
-        return ", ".join(map(str,[self.round_number, self.date, self.value, self.town]))
+        return ", ".join(map(str,[self.round_number, self.date, self.value, self.town.encode('unicode')]))
 
     def numbers_list(self):
         return ", ".join(map(str, sorted([i.number for i in self.numbers_set.filter(extra=0)])))

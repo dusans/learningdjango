@@ -6,4 +6,5 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     (r'^drawList/$', 'prviDjango.lottery.views.drawList'),
+    (r'^history/(?P<page_number>\d+)/$', 'prviDjango.lottery.views.history'),
 )

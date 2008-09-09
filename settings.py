@@ -58,11 +58,20 @@ TEMPLATE_LOADERS = (
 #     'django.template.loaders.eggs.load_template_source',
 )
 
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.core.context_processors.auth',
+    'django.core.context_processors.debug',
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.media',
+    'django.core.context_processors.request',
+)
+
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.middleware.doc.XViewMiddleware'
+    'django.middleware.doc.XViewMiddleware',
+    'pagination.middleware.PaginationMiddleware',
 )
 
 ROOT_URLCONF = 'prviDjango.urls'
@@ -73,6 +82,8 @@ TEMPLATE_DIRS = (
     # Don't forget to use absolute paths, not relative paths.
     "d:/Programi/PROGRAMIRANJE/Python/moduls/django/tests/templates",
     "d:/projekti/prviDjango/templates",
+    "c:/Programi/PROGRAMIRANJE/Python/moduls/django/tests/templates",
+    "c:/projekti/prviDjango/templates",
 )
 
 INSTALLED_APPS = (
@@ -81,6 +92,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.admin',
-    'prviDjango.polls',
-    'prviDjango.lottery',
+    'polls',
+    'lottery',
+    'pagination',
 )
