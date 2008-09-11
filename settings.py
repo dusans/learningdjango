@@ -9,6 +9,8 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
+ACCOUNT_ACTIVATION_DAYS = 30
+
 DATABASE_ENGINE = 'postgresql_psycopg2'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
 DATABASE_NAME = 'postgres'             # Or path to database file if using sqlite3.
 DATABASE_USER = 'postgres'             # Not used with sqlite3.
@@ -36,7 +38,7 @@ USE_I18N = True
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
-MEDIA_ROOT = ''
+MEDIA_ROOT = 'c:/projekti/prviDjango/media/'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
@@ -57,6 +59,13 @@ TEMPLATE_LOADERS = (
     'django.template.loaders.app_directories.load_template_source',
 #     'django.template.loaders.eggs.load_template_source',
 )
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'dusan.smitran@gmail.com'
+EMAIL_HOST_PASSWORD = 'vipergts'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.auth',
@@ -95,4 +104,6 @@ INSTALLED_APPS = (
     'polls',
     'lottery',
     'pagination',
+    'registration',
+    'simpleLogin',
 )
