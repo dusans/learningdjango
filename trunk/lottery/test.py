@@ -1,12 +1,15 @@
 import datetime
 import random
 import re
-from prviDjango.lottery.models import Draw, Numbers
+from lottery.models import Draw, Numbers
+from django.contrib.auth.models import User
 from mesta import towns
 
-datum = datetime.date.today()
-for townName, num in zip(towns.split(), range(len(towns.split()))):
-    d = Draw(round_number=num, is_drawen=0, value=random.randrange(1, 1000000), town=townName, is_old=0, user_id=1, date=datum)
+today = datetime.date.today()
+xgo4 = User.objects.get(pk=6)
+
+for k in range(10):
+    d = Draw(round_number=44, is_drawen=0, value=0, town="", is_old=0, user_id=xgo4.id, date=today)
     d.save()
     for i in range(7):
         d.numbers_set.create(number=random.randint(1,38), extra=0)
@@ -15,8 +18,6 @@ for townName, num in zip(towns.split(), range(len(towns.split()))):
     d.save()
 
 '''d = Draw.objects.get(pk=4)
-
-
 d.save()
 
 ", ".join(map(str, d.numbers_set.all()))

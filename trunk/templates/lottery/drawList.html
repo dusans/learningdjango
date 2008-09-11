@@ -1,6 +1,5 @@
-{% load pagination_tags %}
 <form id="form1" name="form1" action="/lottery/drawList/" method="POST">
-<table border="1" align="center" cellpadding="3" cellspacing="0" bordercolor="#FFFFFF" aligh="center">
+<table border="1" align="center" cellpadding="3" cellspacing="0" bordercolor="#FFFFFF">
   <tr align="center">
 	<td>
         <a href="/lottery/home/" class="style1">Home</a>
@@ -25,8 +24,8 @@
   </tr>
   <tr align="center">
 	<td>
-        <input type="Submit" value="Submit"></td>
-
+        <input type="Submit" value="Submit">
+    </td>
   </tr>
 </table>
 </form>
@@ -41,8 +40,6 @@
     <th><b>Value</b></th>
     <th><b>State</b></th>
 </tr>
-{# autopaginate draws #}
-
 {% for draw in draws %}
 <tr>
     <td> {{ draw.round_number }}</td>

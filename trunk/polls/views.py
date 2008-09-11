@@ -1,12 +1,12 @@
 # Create your views here.
 from django.http import HttpResponse, HttpResponseRedirect
-from prviDjango.polls.models import Poll, Choice
+from polls.models import Poll, Choice
 from django.template import Context, loader
 from django.shortcuts import render_to_response, get_object_or_404, Http404
 from django.core.urlresolvers import reverse
 from django import forms
 from django.forms import ModelForm
-from prviDjango.polls.models import Poll, Choice
+
 
 class PollForm(ModelForm):
     class Meta:

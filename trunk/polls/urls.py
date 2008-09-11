@@ -1,8 +1,8 @@
 from django.conf.urls.defaults import *
-from prviDjango.polls.models import Poll
+from polls.models import Poll
 # Uncomment the next two lines to enable the admin:
-from django.contrib import admin
-admin.autodiscover()
+#from django.contrib import admin
+#admin.autodiscover()
 
 
 info_dict = {
