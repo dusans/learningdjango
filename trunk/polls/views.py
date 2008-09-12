@@ -1,6 +1,6 @@
 # Create your views here.
 from django.http import HttpResponse, HttpResponseRedirect
-from polls.models import Poll, Choice
+from polls.models import Poll, Choice, DuleImages
 from django.template import Context, loader
 from django.shortcuts import render_to_response, get_object_or_404, Http404
 from django.core.urlresolvers import reverse
@@ -15,6 +15,10 @@ class PollForm(ModelForm):
 class ChoiceForm(ModelForm):
     class Meta:
         model = Choice
+
+class DuleImagesForm(ModelForm):
+    class Meta:
+        model = DuleImages
 
 class ContactForm(forms.Form):
     subject = forms.CharField(max_length=100)
@@ -54,4 +58,21 @@ def vote(req, poll_id):
         selected_choice.save()
         #Always return an HttpResponseRedirect after success
         return HttpResponseRedirect(reverse('poll_results', args=(p.id,)))
+
+def imageList(request):
+    return render_to_response('polls/images.html', {'images': DuleImages.objects.all()})
+
+def imagesForm(request):
+    form = DuleImagesForm()
+    return render_to_response('polls/imagesForm.html', {'form': form})
+
+def uploadImages(request):
+    form = DuleImagesForm(request.POST, request.FILES)
+    if form.is_valid():
+        form.save()
+        return render_to_response('polls/imagesForm.html', {'form': form})
+    else:
+        return render_to_response('polls/imagesForm.html', {'form': form})
+
+
 
