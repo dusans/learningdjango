@@ -1,4 +1,5 @@
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.js" type="text/javascript"></script>
+<html>
+<script src="http://localhost/js/lib/jquery-1.2.6.js" type="text/javascript"></script>
 <script src="http://localhost/js/lib/jquery-create.js" type="text/javascript"></script>
 <form action="/lottery/lucky/" method="POST">
 <table border="1" align="center" cellpadding="3" cellspacing="0" bordercolor="#FFFFFF">
@@ -35,8 +36,8 @@ function delete_lucky(id) {
 //==== ==== ==== ====
 function get_lucky()	{
 $.getJSON("/lottery/get_lucky/", { }, function(json){
-
-        insert_row(json)
+        n = insert_row(json)
+        $('#id_lucky').val(n)
 	});
 }
 
@@ -59,10 +60,9 @@ function my_lucky(string)	{
 //==== ==== ==== ====
 //INSERT NEW ROW
 //==== ==== ==== ====
-function insert_row(json)	{
-	t = $("#luckyTable")[0]
-	id = json[0].fields.draw
-	luckyNumbers = [json[i].fields.number for(i in json)]
+function insert_row(draws)	{
+	id = draws[0].fields.draw
+	luckyNumbers = [draws[i].fields.number for(i in draws)]
 	console.log("luckyNumbers: " + luckyNumbers)
 	console.log("Will create and insert row!!" )
     newRow = $.create(
@@ -73,10 +73,9 @@ function insert_row(json)	{
 			"td", {}, ["input", {"type":"button", "onclick":"delete_lucky("+ id +")", "value":"x",  "width":"7", "height":"7"}, []]
 			]
 	)
-	t.tBodies[0].appendChild(newRow[0])
+	$("#luckyTable tbody").append(newRow)
+	return luckyNumbers
 }
-
-
 </script>
 <div align="center" id="vsebina">
 <table id="luckyTable" border="1" align="center" cellpadding="3" cellspacing="0" bordercolor="#FFFFFF">
@@ -96,7 +95,7 @@ function insert_row(json)	{
 {% endfor %}
 </table>
 
-
+</html>
 <style type="text/css">
     <!--
     body {

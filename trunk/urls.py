@@ -19,4 +19,5 @@ urlpatterns = patterns('',
     (r'^registration/', include('registration.urls')),
     (r'^login/', include('simpleLogin.urls')),
     (r'^loginUser/', include('simpleLogin.urls')),
+    (r'^photologue/', include('photologue.urls')),
 )
