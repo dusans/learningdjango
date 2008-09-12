@@ -38,12 +38,12 @@ USE_I18N = True
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
-MEDIA_ROOT = 'c:/projekti/prviDjango/media/'
+MEDIA_ROOT = 'c:/LightTPD/htdocs/'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
-MEDIA_URL = ''
+MEDIA_URL = 'http://212.235.178.93/'
 
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
@@ -93,6 +93,9 @@ TEMPLATE_DIRS = (
     "d:/projekti/prviDjango/templates",
     "c:/Programi/PROGRAMIRANJE/Python/moduls/django/tests/templates",
     "c:/projekti/prviDjango/templates",
+    "c:/projekti/prviDjango/photologue/templates",
+    "c:/projekti/prviDjango/photologue/templates/photologue",
+
 )
 
 INSTALLED_APPS = (
@@ -106,4 +109,5 @@ INSTALLED_APPS = (
     'pagination',
     'registration',
     'simpleLogin',
+    'photologue',
 )

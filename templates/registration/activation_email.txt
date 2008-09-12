@@ -1,4 +1,4 @@
 Activation key: {{ activation_key }}
 Expiration days: {{ expiration_days }}
 Site: {{ site }}
-http://localhost:8000/registration/activate/{{ activation_key }}/
+http://212.235.178.93:8000/registration/activate/{{ activation_key }}/

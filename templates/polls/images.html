@@ -1,0 +1,21 @@
+<p><a href="/polls/images/">Upload</a> <a href="/polls/imageList/">List</a></p>
+<p>
+{% for i in images %}
+    {{ i.name }} <br/> <img width="300px" src="{{ i.image.url }}" /><br/><br/>
+{% endfor %}
+</p>
+
+<style type="text/css">
+    <!--
+    body {
+        background-color: grey;
+    }
+    body,td,th {
+        font-family: Verdana, Arial, Helvetica, sans-serif;
+        font-size: 12px;
+        color: #FFDB4C;
+}
+.style1 {color: #FFFFFF}
+.style2 {font-size: 10px;}
+-->
+</style>
