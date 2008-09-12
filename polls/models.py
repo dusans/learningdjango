@@ -43,5 +43,7 @@ class PollAdmin(admin.ModelAdmin):
 admin.site.register(Poll, PollAdmin)
 #admin.site.register(Choice)
 
-
+class DuleImages(models.Model):
+    name = models.CharField(max_length=200, blank=True)
+    image = models.ImageField(upload_to='images')
 
