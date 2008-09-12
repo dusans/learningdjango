@@ -1,0 +1,209 @@
+<%
+import sqlite3, time, re
+from mod_python import Session 
+
+sess = Session.Session(req)
+idUpor = ""
+
+if not sess.is_new():
+    sess.load()
+    idUpor = str(sess.get('uporId', '-')) + " " + str(sess.timeout())
+    req.content_type="text/html"
+
+#==== PREBERI FORMO ====
+sedmica = ""; se="";
+stran = int(req.form.get('stran',0))
+naStran = int(req.form.get('naStran',20))
+aliSedmica = str.capitalize( req.form.get("sedmica", "False") )
+aliAjax = req.form.get('aliAjax',"False")
+aliAjaxChecked = str.capitalize( req.form.get("aliAjaxChecked", "False") )
+
+if aliSedmica=="True":
+    sedmica = "checked"; se="AND sedmica != ''"
+if aliAjaxChecked == "False":
+    aliAjaxChecked = "";
+else:
+    aliAjaxChecked = "checked"
+#==== FUNKCIJE ====
+def eval2(foo):
+	return eval(re.sub(r"0(?=[1-9])","",foo))
+	
+def gotOne(a, b):
+	for i in a:
+		if i in b:
+			return True
+	return False
+	
+def gotAll(a, b):
+	for i in a:
+		if not i in b:
+			return False
+	return True
+
+#==== PODATKI ====
+def getData():
+	#==== Dobi podatke iz DB ====
+
+    conn = sqlite3.connect("/var/www/ora/ora_mod_python/ora31/semi.db")
+    c = conn.cursor()
+
+    #==== PAGES ====
+    c.execute("SELECT COUNT(id) FROM loto WHERE staro='1' "+se)
+    count = c.fetchone()[0]
+
+    global m     #vrstic na stran
+    m = min(naStran, 100)     
+    od = (stran) * m
+    global stStrani
+    stStrani = count/m #TODO round up
+    
+    c.execute("SELECT * FROM loto WHERE staro='1' "+se+" ORDER BY id DESC LIMIT "+str(od)+", "+str(m)+";")
+    lotoB = c.fetchall()
+    
+    c.close()
+    conn.close()
+    return lotoB
+
+podatki = getData()
+#TABELA ZA JAVASCRIPT
+def javaScriptTabela():
+    string = ""
+    for i in podatki:
+        string += str(list(i)).replace('u','')+', \n'
+    JSpodatki = "[" + string + "]"
+
+    return JSpodatki    
+
+def getTable():
+    lotorija = podatki
+    string =  '<script>function tralala() {labela.innerHTML = '+str(stStrani)+'; return labela.innerHTML}</script>'
+    string += '<table border="1" align="center" cellpadding="3" cellspacing="0" bordercolor="#FFFFFF">\n';
+    string += '<tr>\n <td><b>ID</b></td>\n <td><b>Datum</b></td>\n <td><b>Krog</b></td>\n<td><b>Izzrebane stevilke</b></td>\n<td><b>St. 7</b></td>\n<td><b>Vrednost 7 €</b></td>\n</tr>\n'    
+    kaj = [0,1,2,3,4,-3]  
+    for vrsta in lotorija:
+        # 
+        string +=" <tr>\n"
+        for i in kaj:
+            string += '<td>'+str(vrsta[i])+'</td>\n'
+        string += '</tr>\n'
+        
+    string += '</table>\n'
+    return string
+
+if aliAjax == "True":
+%>
+<%=getTable()%>
+<%
+else:
+%>
+<script>
+//==== JAVASCRIPT ====
+function validate() {
+
+    if( (_("stran").value).replace(/\d/g,"")	!= ""  ) {
+		alert("Vnesite stevilo za stran")
+		return false
+	}
+    if( (_("naStran").value).replace(/\d/g,"")	!= "" || _("naStran").value < 1) {
+		alert("Vnesite stevilo na stran, ki mora biti vecje od nic")
+		return false
+	}
+    
+	return true	
+    }
+function _(ime) {
+    return document.getElementById(ime)
+    }
+function osvezi() {
+    if (validate())
+        if(aliAjaxChecked.checked)
+            ajax()
+        else
+            document.form1.submit()
+    }
+function naprej()   {
+    stran.value = parseInt(stran.value) + 1
+    osvezi()
+    }
+function nazaj() {
+    stran.value = Math.max(parseInt(stran.value) - 1, 0)
+    osvezi()
+    }
+function ajax()
+  {
+  var xmlHttp;
+    xmlHttp=new XMLHttpRequest();
+    xmlHttp.onreadystatechange=function()
+      {
+      if(xmlHttp.readyState==4)	{
+        vsebina.innerHTML=xmlHttp.responseText;
+        //labela.innerHTML = labela2.innerHTML
+        
+        //alert(tralala())
+        }
+      }
+    //stevila=&aliIn=True&sedmica=True&stran=0&naStran=10
+    url = "zgodovina.psp?aliAjax=True"
+    url +=  "&sedmica=" + sedmica.checked
+    url +=  "&stran=" + stran.value + "&naStran=" + naStran.value
+    xmlHttp.open("GET", url, true);
+    xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+	xmlHttp.send(null); 
+    }
+function maxStevStrani() {
+    stran.value = Math.min(stran.value, labela.innerHTML)
+    }
+onload=maxStevStrani
+</script>
+
+<style type="text/css">
+    <!--
+    body {
+        background-color: #3779AF;
+    }
+    body,td,th {
+        font-family: Verdana, Arial, Helvetica, sans-serif;
+        font-size: 12px;
+        color: #FFDB4C;
+}
+.style1 {color: #FFFFFF}
+-->
+</style>
+<form id="form1" name="form1" action="zgodovina.psp" method="GET">
+    <div align="center"><img src="header.jpg" width="338" height="71"></div>
+    <table border="1" align="center" cellpadding="3" cellspacing="0" bordercolor="#FFFFFF" aligh="center">
+      <tr align="center">
+        <td>    <a href="index.html" class="style1">Domov</a>
+                    <a href="prvi.psp" class="style1">Sedanjost</a>
+                    <a href="zgodovina.psp" class="style1">Zgodovina</a>
+                    <a href="getData.psp" class="style1">Osvezi</a>
+                    <a href="srecne.psp" class="style1">Moje Srecne</a>
+      </tr>
+      <tr align="center">
+        <td>
+            <input type="button" id="s" value="l<<" onclick="stran.value = 0; osvezi()">
+            <input type="button" id="s" value="<" onclick="nazaj()">
+            <input type="text" name="stran" id="stran" size="3" value="<%=stran%>" onChange="if (validate()) osvezi()"> / <label id="labela" name="labela"><%=stStrani%></label>
+            <input type="button" id="s" value=">" onclick="naprej()">
+            <input type="button" id="s" value=">>l" onclick="stran.value = labela.innerHTML; osvezi()">
+            </td>
+      </tr>
+      <tr align="center">
+        <td>Na stran: <input type="text" name="naStran" id="naStran" size="3" value="<%=naStran%>" onChange="if (validate()) document.form1.submit()"> (100 max)
+               </td>
+      </tr>
+      <tr align="center">
+        <td>Ajax: <input type="checkbox" id="aliAjaxChecked" name="aliAjaxChecked" value="True" <%=aliAjaxChecked%> >
+         <input type="button" id="s" value="Submit" onclick="if (validate()) document.form1.submit()">
+         Sedmica: <input type="checkbox" name="sedmica" id="sedmica" <%=sedmica%> value="True"  onChange="if (validate()) document.form1.submit()"></td>
+      </tr>
+    </table>
+
+    <div align="center" id="vsebina">
+    <%=getTable()%>
+    </div>
+</form>
+<%
+
+%>

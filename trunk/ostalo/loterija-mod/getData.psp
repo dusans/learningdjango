@@ -1,0 +1,77 @@
+<%
+import re, urllib, sqlite3, time
+
+def index():
+	req.content_type="text/html"
+	time.sleep(3)
+	skupaj = 0
+	a = b = zac = time.asctime()
+	try:
+		a = time.time()
+		#==== Povezi se da DB ====
+		conn = sqlite3.connect("/var/www/ora/ora_mod_python/ora31/semi.db",timeout=5.0)
+		c = conn.cursor()
+		#==== Vse daj v zgodovino ====
+		c.execute("UPDATE loto SET staro='1'")
+
+		#TODO updati samo je to potrebno
+
+		# ==== ZMANJSANJE BAZE
+		c.execute("SELECT COUNT(*) FROM loto")
+		if c.fetchone()[0] > 100000:
+			c.execute("SELECT MIN(id) FROM loto")
+			od = c.fetchone()[0]
+			c.execute("DELETE FROM loto WHERE id<"+str(od+10000))
+			
+		#c.execute("CREATE TABLE IF NOT EXISTS loto (id INTEGER PRIMARY KEY, datum TEXT, krog INTEGER, stevilke TEXT, dodatna INTEGER, sedmica INTEGER, vrednost INTEGER, kraj TEXT, staro INTEGER );") #IF NOT EXISTS
+
+		#==== VSA LETA (dobi linke) ====
+		lotoLeta = urllib.urlopen("http://www.loterija.si/igre/loto/statistike/").read()
+		leta = re.search('(<DIV class="content-aux"> <div class="box-title">Loto statistike</div><div class="box-body"><UL>)(?P<temp>(.|[\n\r])*?)(<\/UL>)',lotoLeta)
+		linki = (re.sub(r"(<LI><A HREF=\"../../../)|\">.{4}</A></LI>","",leta.group("temp"))).split("\n")
+
+		#==== GET LETO ====
+		for leto in linki:
+			#==== Odpri URL ====
+			a = time.time()
+			loto = urllib.urlopen("http://www.loterija.si/" + leto).read()
+			b = time.time()
+			# POZRESNO tabela = re.split('(<TABLE cellspacing="0" cellpadding="3" class="stable-border" >)|(<\/TABLE>)',loto)
+			tabela = re.search('(<TABLE cellspacing="0" cellpadding="3" class="stable-border" >)(?P<temp>(.|[\n\r])*?)(<\/TABLE>)',loto) #Najdi tabelo
+			if tabela != None:
+				#NA VRSTICE
+				vrstice = re.split(r"<TR>|<\/TR>", tabela.group("temp").upper()) #.group("temp") [3]
+				vrstice = vrstice[1:] #brez GLAVE
+
+				HTMLtabela = [i for i in vrstice if re.search(r"^\0|^\s$|^\n$|^\r$|^(\r\n)$", i) == None and i != ""] #odstrani prazne vrstice
+				for i in reversed(HTMLtabela):
+					#NA STOLPCE
+					polja = re.split(r"<TD>|<TD[^>]*>|<\/TD>|<NOBR>|<\/NOBR>|<BR\/>|<BR>", i) 
+					l = [i for i in polja if re.search(r"^\0|^\s$|^\n$|^\r$|^(\r\n)$", i) == None and i != ""]
+					l = [i.replace("&NBSP;","") for i in l] #grdo
+
+					if len(l) >= 9:	#grdo
+						l = l[0:8]
+					if len(l) > 4: #grdo
+						c.execute("INSERT INTO loto VALUES (NULL, '"+l[0]+"', '"+l[1]+"', '"+l[2]+"', '"+l[3]+"', '"+l[4]+"', '"+l[-2]+"', '', '0') ;") #"+l[-1]+"
+
+			skupaj += b-a
+
+		conn.commit()
+		
+		req.write(str(skupaj)+"<br>")
+		script = '<script> function move() {window.location = "prvi.psp"}</script>'
+		req.write(script+'<html><body onload="timer=setTimeout(''move()'',4000)"><b>Podatki so bili preneseni uspesno</b><br></body></html>')
+	except Exception, inst:
+		conn.rollback()
+		req.write(str(type(inst)))     	# the exception instance
+		req.write(str(inst.args))     	# arguments stored in .args
+		req.write(str(inst))        	# __str__ allows args to printed directly
+		req.write("Prislo je do napake :(")
+	finally:
+		c.close()
+		del c
+		conn.close()
+
+index()		
+%>

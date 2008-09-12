@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<schema>
+	<widgets>
+		<widget caption="File" widgetName="OWFile" xPos="260" yPos="420"/>
+		<widget caption="Data Table" widgetName="OWDataTable" xPos="370" yPos="150"/>
+		<widget caption="Scatterplot" widgetName="OWScatterPlot" xPos="480" yPos="150"/>
+	</widgets>
+	<channels>
+		<channel enabled="1" inWidgetCaption="Data Table" outWidgetCaption="File" signals="[('Examples', 'Examples')]"/>
+		<channel enabled="1" inWidgetCaption="Scatterplot" outWidgetCaption="File" signals="[('Examples', 'Examples')]"/>
+	</channels>
+	<settings settingsDictionary="{'Scatterplot': &quot;(dp1\nS'autoSendSelection'\np2\nI1\nsS'graph.showDistributions'\np3\nNsS'graph.showAxisScale'\np4\nI1\nsS'widgetXPosition'\np5\nI22\nsS'widgetYPosition'\np6\nI29\nsS'widgetWidth'\np7\nI700\nsS'selectedSchemaIndex'\np8\nI0\nsS'graph.pointWidth'\np9\nI5\nsS'graph.showFilledSymbols'\np10\nI1\nsS'showGridlines'\np11\nI0\nsS'graph.jitterContinuous'\np12\nI0\nsS'localContexts'\np13\n(lp14\nsS'showProbabilitiesDetails'\np15\nI0\nsS'graph.jitterSize'\np16\nI5\nsS'graph.showProbabilities'\np17\nI0\nsS'graph.showXaxisTitle'\np18\nI1\nsS'widgetShown'\np19\nI0\nsS'graph.showLegend'\np20\nI1\nsS'localContextsVersion'\np21\n(I100\nI0\ntp22\nsS'graph.showYLaxisTitle'\np23\nI1\nsS'toolbarSelection'\np24\nI0\nsS'widgetHeight'\np25\nI550\nsS'colorSettings'\np26\nNsS'VizRankLearnerName'\np27\nNs.&quot;, 'Data Table': &quot;(dp1\nS'widgetShown'\np2\nI0\nsS'widgetHeight'\np3\nI480\nsS'widgetXPosition'\np4\nI316\nsS'widgetWidth'\np5\nI640\nsS'widgetYPosition'\np6\nI242\ns.&quot;, 'File': &quot;(dp1\nS'widgetHeight'\np2\nI409\nsS'widgetXPosition'\np3\nI455\nsS'widgetYPosition'\np4\nI278\nsS'widgetShown'\np5\nI0\nsS'createNewOn'\np6\nI2\nsS'widgetWidth'\np7\nI363\nsS'localContextsVersion'\np8\n(I100\nI0\ntp9\nsS'localContexts'\np10\n(lp11\n(iOWContexts\nContext\np12\n(dp13\nS'symbolDK'\np14\nS''\nsS'symbolDC'\np15\nS''\nsS'time'\np16\nF1216370885.9530001\nsS'filename'\np17\nS'C:/projekti/k-dule/podatki.tab'\np18\nsba(iOWContexts\nContext\np19\n(dp20\ng14\nS''\nsg15\nS''\nsg16\nF1216370796.1400001\nsg17\nS''\nsba(iOWContexts\nContext\np21\n(dp22\ng14\nS''\nsg15\nS''\nsg16\nF1216370663.6559999\nsg17\nS''\nsbasS'recentFiles'\np23\n(lp24\ng18\naS'C:/Python25/Lib/site-packages/orange/doc/datasets/iris.tab'\np25\nas.&quot;}"/>
+</schema>

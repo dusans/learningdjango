@@ -1,0 +1,361 @@
+<%
+import sqlite3, time, re
+from mod_python import Session 
+
+#==== PODATKI O UPORABNIKU ====
+sess = Session.Session(req)
+idUpor = "Gost"; uporIme = datumR = ""
+if not sess.is_new():
+    idUpor += " ali pa"
+    sess.load()
+    idUpor = str(sess.get('uporId', '-'))
+    uporIme = str(sess.get('uporIme', ''))
+    datumR = str(sess.get('datumR', ''))
+
+#==== PREBERI FORMO ====
+sedmica = ""; se=""; logicniIn = ""
+od = req.form.get('od', "1.1.2007")
+do = req.form.get('do', "31.12.2008")
+stevila = req.form.get('stevila',"")
+aliSedmica = str.capitalize( req.form.get("sedmica", "False") )
+aliIn = str.capitalize( req.form.get("aliIn", "False") )
+aliAjax = req.form.get('aliAjax',"False")
+
+if aliSedmica=="True":
+    sedmica = "checked"; se="AND sedmica != ''"
+if aliIn=="True":
+    logicniIn = "checked";
+    
+#==== FUNKCIJE ====
+#==== Ali je datum a vecji od b ==== 
+def dv(a, b): 
+	a, b = a.split("."), b.split(".")
+	for i, j in reversed(zip(a,b)):
+		if int(i) > int(j):
+			return True
+		elif int(i) < int(j):
+			return False
+
+	return False
+
+#==== O(logn) ISKANJE ==== ker sqlite3 ne podpira date tip :(
+def index(seznam, datum):
+	levi = 0; desni = len(seznam); i = desni/2
+	while i != levi:
+		if dv(seznam[i][1], datum):
+			levi = i
+		else:
+			desni = i
+		i = (levi+desni)/2
+
+	return i
+
+def eval2(foo):
+	return eval(re.sub(r"0(?=[1-9])","",foo))
+	
+def gotOne(a, b):
+	for i in a:
+		if i in b:
+			return True
+	return False
+	
+def gotAll(a, b):
+	for i in a:
+		if not i in b:
+			return False
+	return True
+
+#==== PODATKI ====
+
+def getData():
+	#==== Dobi podatke iz DB ====
+
+    conn = sqlite3.connect("/var/www/ora/ora_mod_python/ora31/semi.db")
+    c = conn.cursor()
+    c.execute("SELECT * FROM loto WHERE staro='0' "+se+" ORDER BY id ASC;") #WHERE id<'101' and id>'62'
+    lotoB = c.fetchall()
+    #req.write(str(lotoB))
+    c.close()
+    conn.close()
+    return lotoB
+
+def filteredData():
+    loto = getData()
+    #==== ISKANJE ====
+    if od != "" and do != "":
+
+		desnaM = index(loto, od)
+		levaM = index(loto, do)
+		loto = loto[levaM:desnaM+1]
+
+    if stevila != "":
+        #req.write("wtf stevila")
+        if aliIn=="True":
+            foo = [i for i in loto if gotAll( eval(stevila), eval2(i[3]) ) ]
+        else:
+            foo = [i for i in loto if gotOne( eval(stevila), eval2(i[3]) ) ]
+        
+        loto=foo
+    
+    return loto
+
+podatki = filteredData()
+#req.write(str(podatki))
+
+#TABELA ZA JAVASCRIPT
+string = ""
+for i in getData():
+    string += str(list(i)).replace('u','')+', \n'
+JSpodatki = "[" + string + "]"
+
+
+def getTable():
+    lotorija = podatki
+    string = '<table border="1" align="center" cellpadding="3" cellspacing="0" bordercolor="#FFFFFF">\n';
+    string += '<tr>\n<td><b>Datum</b></td>\n<td><b>Krog</b></td>\n<td><b>Izzrebane stevilke</b></td>\n<td><b>St. 7</b></td>\n<td><b>Vrednost 7 €</b></td>\n</tr>\n'
+    kaj = [1,2,3,4,-3]  
+    for vrsta in lotorija:
+        # 
+        string +=" <tr>\n"
+        for i in kaj:
+            string += '<td>'+str(vrsta[i])+'</td>\n'
+        string += '</tr>\n'
+        
+    string += '</table>\n'
+    return string
+
+if aliAjax == "True":
+%>
+<%=getTable()%>
+<%
+else:
+
+%>
+<script>
+//==== JAVASCRIPT ====
+var podatki = <%=JSpodatki%>
+/*Array.prototype.has=function(v){
+	for (i in this){
+		if (this[i]==v) 
+			return true;
+	}
+	return false;
+}*/
+function validate() {
+
+	if( !(/\d+\.\d+\.\d{4}$/).test(_("od").value) && _("od").value != "" ) {
+		alert("Vnesite pravilen od datum... npr: 11.11.2007")
+		return false
+	}
+	if( !(/\d+\.\d+\.\d{4}$/).test(_("do").value)  && _("do").value != ""  ) {
+		alert("Vnesite pravilen do datum... npr: 11.11.2007")
+		return false
+	}
+
+	if( (_("stevila").value).replace(/\[(\d+\s*,?\s*)*\]$/g,"") != "" ) {
+		alert("; Vnesite pravilen seznam stevil... npr: [1,2,3]")
+		return false
+	}
+
+	return true	
+}
+function has(a, b) {
+    for (i in a){
+        if (a[i]==b) 
+        return true;
+    }
+    return false;
+}
+
+function dv(a, b) {
+    a = a.replace(/0(?=[1-9].)/g,""); b = b.replace(/0(?=[1-9].)/g,""); 
+    a = (a.split(".")).reverse(); b = (b.split(".")).reverse()
+    for (i in a) 
+        if (parseInt(a[i]) > parseInt(b[i]))
+            return true
+        else if (parseInt(a[i]) < parseInt(b[i]))
+            return false
+
+    return false
+}
+function index(seznam, datum) {
+    var levi = 0; var desni = seznam.length; var i = Math.floor(desni/2)
+    while (i != levi) {
+        if (dv(seznam[i][1], datum))
+           	levi = i
+        else 
+            desni = i
+        i = Math.floor((levi+desni)/2);
+    }
+    //alert("NAJDEN NAJBLIZJE DATUM: " + seznam[i][1])
+    return i 
+}
+function gotAll(a, b) {
+    for (i in a)
+        if (!has(b, a[i]))
+            return false
+    return true
+}
+function gotOne(a, b) {
+    for (i in a)
+        if (has(b, a[i]))
+            return true
+    return false
+}
+function eval2(evaluateIt) {
+    return eval(evaluateIt.replace(/0(?=[1-9])/g,""))
+}
+function filteredData() {
+    var filtered = podatki
+    if(sedmica.checked) 
+        filtered = [podatki[i] for (i in podatki) if (podatki[i][5] != "")]   
+
+    if(od.value != "") {
+        desnaM = index(filtered, od.value)
+        levaM = index(filtered, _("do").value) 
+        filtered = filtered.slice(levaM,desnaM+1)
+    }
+
+    if(stevila.value != "") {
+        if(aliIn.checked)
+            foo = [filtered[i] for (i in filtered) if ( gotAll( eval(stevila.value), eval2("["+filtered[i][3]+"]") ) ) ]
+        else
+            foo = [filtered[i] for (i in filtered) if ( gotOne( eval(stevila.value), eval2("["+filtered[i][3]+"]") ) ) ]
+
+        filtered = foo
+    }
+    return filtered
+}
+function getTable() {
+    lotorija = filteredData()
+    string = '<table border="1" align="center" cellpadding="3" cellspacing="0" bordercolor="#FFFFFF">\n'
+    string += '<tr>\n<td><b>Datum</b></td>\n<td><b>Krog</b></td>\n<td><b>Izzrebane stevilke</b></td>\n<td><b>St. 7</b></td>\n<td><b>Vrednost 7 €</b></td>\n</tr>\n'    
+
+    for (i in lotorija) {
+            string += '<tr>\n'
+            string += '<td>'+lotorija[i][1]+'</td>\n'
+            string += '<td>'+(lotorija[i][2])+'</td>\n'
+            string += '<td>'+lotorija[i][3]+'</td>\n'
+            string += '<td><b>'+(lotorija[i][4])+'</b></td>\n'
+            string += '<td><b>'+lotorija[i][lotorija[i].length -3]+'</b></td>\n'
+            string += '</tr>\n'
+    }
+    string += '</table>\n'
+
+    return string    
+}
+
+function _(ime) {
+    return document.getElementById(ime)
+}
+function createQuery(){
+    var foo = new Array();
+    f = form1.elements
+    for (i in f) {
+        if( f[i].name != "" && f[i].value != ""  && f[i].name != "undefined" )
+            foo.push( f[i].name+"="+encodeURIComponent(f[i].value) )
+        //alert(i)
+    }
+    alert(foo.join("&"))
+}
+function ajax()
+  {
+  var xmlHttp;
+    xmlHttp=new XMLHttpRequest();
+    xmlHttp.onreadystatechange=function()
+      {
+      if(xmlHttp.readyState==4)	{
+        vsebina.innerHTML=xmlHttp.responseText;
+        }
+      }
+    url = "prvi.psp?od=" + od.value + "&do=" + _("do").value 
+    url +=  "&stevila=" + encodeURIComponent(stevila.value) 
+    url +=  "&sedmica=" + sedmica.checked + "&aliIn=" + aliIn.checked
+    url +=  "&aliAjax=True"
+    xmlHttp.open("GET", url, true);
+    xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    //xmlHttp.onreadystatechange=stateChanged;
+    //xmlHttp.setRequestHeader("Content-Length", "113495");
+        
+
+    //od=1.1.2007&do=12.1.2007&stevila=&sedmica=True
+    xmlHttp.setRequestHeader("od", encodeURIComponent(od.value));
+    xmlHttp.setRequestHeader("do", encodeURIComponent(_("do").value));
+    xmlHttp.setRequestHeader("stevila", encodeURIComponent(stevila.value));
+    xmlHttp.setRequestHeader("sedmica", sedmica.checked);
+    xmlHttp.setRequestHeader("aliIn", aliIn.checked);
+	xmlHttp.setRequestHeader("aliAjax", "True");
+	xmlHttp.send(null); //createQuery()
+
+}
+function srecna22()
+{
+ var xmlHttp2;
+    xmlHttp2=new XMLHttpRequest();
+    xmlHttp2.onreadystatechange=function()
+      {
+      if(xmlHttp2.readyState==4)	{
+        _("srecnaV").value=xmlHttp2.responseText;
+        }
+      }
+    url = "admin.py/srecna?datumR=<%=datumR%>"
+    xmlHttp2.open("GET", url, true);
+    xmlHttp2.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+	xmlHttp2.send(null); //createQuery()
+}
+
+</script>
+<style type="text/css">
+    <!--
+    body {
+        background-color: #3779AF;
+    }
+    body,td,th {
+        font-family: Verdana, Arial, Helvetica, sans-serif;
+        font-size: 12px;
+        color: #FFDB4C;
+}
+.style1 {color: #FFFFFF}
+.style2 {font-size: 10px;}
+-->
+</style>
+<form id="form1" name="form1" action="prvi.psp" method="GET">
+<div align="center"><img src="header.jpg" width="338" height="71"></div>
+<table border="1" align="center" cellpadding="3" cellspacing="0" bordercolor="#FFFFFF" aligh="center">
+  <tr align="center">
+	<td>    <a href="index.html" class="style1">Domov</a>
+                <a href="prvi.psp" class="style1">Sedanjost</a>
+                <a href="zgodovina.psp" class="style1">Zgodovina</a>
+                <a href="getData.psp" class="style1">Osvezi</a>
+                <a href="srecne.psp" class="style1">Moje Srecne</a>
+  </tr>
+  <tr align="center">
+	<td>Zdravo <%=uporIme%> ; 
+         <input name="srecnaV" class="style2" type="text" id="srecnaV" size="21">
+         <input type="button" id="srecna" onclick="srecna22()" value="Srecna"></td>
+  </tr>
+  <tr>
+	<td align="center">
+		Od: <input name="od" type="text" id="od" value="<%=od%>" size="12">
+		Do: <input name="do" type="text" id="do" value="<%=do%>" size="12"> 
+		Sedmica: <input type="checkbox" name="sedmica" id="sedmica" <%=sedmica%> value="True"></td>
+  </tr>
+  <tr align="center">
+	<td>
+		Stevila: <input type="text" name="stevila" id="stevila" value="<%=stevila%>">
+		Logicni In: <input type="checkbox" name="aliIn" id="aliIn" value="True" <%=logicniIn%> ></td>
+  </tr>
+  <tr align="center">
+	<td><input type="button" id="hitroAjax" onclick="if (validate()) ajax()" value="Ajax">
+        <input type="button" id="hitroIskanje" onclick="if (validate()) vsebina.innerHTML = getTable()" value="JS-Hitro">
+        <input type="button" id="s" value="Submit" onclick="if (validate()) document.form1.submit()"></td>
+  </tr>
+</table>
+
+<div align="center" id="vsebina">
+<%=getTable()%>
+</div>
+</form>
+<%
+
+%>

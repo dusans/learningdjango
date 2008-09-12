@@ -1,0 +1,80 @@
+<style type="text/css">
+    <!--
+    body {
+        background-color: #3779AF;
+    }
+    body,td,th {
+        font-family: Verdana, Arial, Helvetica, sans-serif;
+        font-size: 12px;
+        color: #FFDB4C;
+}
+-->
+</style>
+<script type="text/javascript">
+function Oseba() {upoIme = ""; ime = ""; priimek = ""; mail=""; datum="";geslo="";geslo2=""}
+Oseba.prototype.preveri = function () {
+	upoImeL.innerHTML = ( (this.upoIme=="" || this.upoIme==null) ? "Vnesi uporabnisko ime" : "OK")
+	imeL.innerHTML = ( (this.ime=="" || this.ime==null) ? "Vnesi ime" : "OK")
+	priimekL.innerHTML = ( (this.priimek=="" || this.priimek==null) ? "Vnesi priimek" : "OK")
+	mailL.innerHTML = !isValidMail(this.mail) ? "Mail mora vsebovati @" : "OK"
+	datumL.innerHTML = !(/\d+\.\d+\.\d{4}$/).test(this.datum) ? "Datum ni uredu" : "OK"
+	geslo2L.innerHTML = gesloL.innerHTML = !(this.geslo == this.geslo2 && this.geslo != "") ? "Geslo ni uredu" : "OK"
+	
+	if(imeL.innerHTML == priimekL.innerHTML && mailL.innerHTML == datumL.innerHTML) //neumno :) ampak ok
+		return true
+		
+	return false
+}
+os = new Oseba()
+
+function isValidMail(mail) {
+	if(mail == null) return false
+	if(mail.indexOf("@")>-1) return true
+	
+	return false
+}
+
+</script>
+<div align="center">
+<h1>Registriraj se!</h1>
+<form align="center" name="myform" action="admin.py/register" method="post"> 
+<div onchange="os.preveri()">
+	<table border="1" align="center" cellpadding="3" cellspacing="0" bordercolor="#FFFFFF" aligh="center">
+      <tr align="center">
+        <td><p align="left">Uporabnisko ime:
+          <input type="text" name="upoIme" onchange="os.upoIme=this.value" />
+              <label id="upoImeL"></label>
+        </p>
+          <p align="left">Ime:
+            <input type="text" name="ime" onchange="os.ime=this.value" />
+              <label id="imeL"></label>
+          </p>
+          <p align="left">Priimek:
+            <input type="text" name="priimek" onchange="os.priimek=this.value" />
+              <label id="priimekL"></label>
+          </p>
+          <p align="left">Mail:
+            <input type="text" name="mail" onchange="os.mail=this.value" />
+              <label id="mailL"></label>
+          </p>
+          <p align="left">Datum rojstva:
+            <input type="text"  name="datum" id="datum" onchange="os.datum=this.value" />
+              <label id="datumL"></label>
+          </p>
+          <p align="left">Geslo:
+            <input type="password"  name="geslo" onchange="os.geslo=this.value" />
+              <label id="gesloL"></label>
+          </p>
+          <p align="left">Geslo(se enkrat):
+            <input type="password" name="geslo2" onchange="os.geslo2=this.value" />
+              <label id="geslo2L"></label>
+          </p></td>
+      </tr>
+    </table>
+	</div>
+<p><input type="button" value="Oddaj" onclick="if(os.preveri()) {document.myform.submit()} else {alert('Neki ne stima')}"></p>
+</form>
+</div>
+
+
+
