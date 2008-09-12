@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<schema>
+	<widgets>
+		<widget caption="File" widgetName="OWFile" xPos="170" yPos="270"/>
+		<widget caption="Data Table" widgetName="OWDataTable" xPos="420" yPos="150"/>
+		<widget caption="Scatterplot" widgetName="OWScatterPlot" xPos="490" yPos="350"/>
+	</widgets>
+	<channels>
+		<channel enabled="1" inWidgetCaption="Data Table" outWidgetCaption="File" signals="[('Examples', 'Examples')]"/>
+		<channel enabled="1" inWidgetCaption="Scatterplot" outWidgetCaption="File" signals="[('Examples', 'Examples')]"/>
+	</channels>
+	<settings settingsDictionary="{'Scatterplot': &quot;(dp1\nS'autoSendSelection'\np2\nI1\nsS'graph.showDistributions'\np3\nNsS'graph.showAxisScale'\np4\nI1\nsS'widgetXPosition'\np5\nI286\nsS'widgetYPosition'\np6\nI207\nsS'widgetWidth'\np7\nI700\nsS'selectedSchemaIndex'\np8\nI0\nsS'graph.pointWidth'\np9\nI5\nsS'graph.showFilledSymbols'\np10\nI1\nsS'showGridlines'\np11\nI0\nsS'graph.jitterContinuous'\np12\nI0\nsS'localContexts'\np13\n(lp14\n(iOWContexts\nContext\np15\n(dp16\nS'noCopy'\np17\n(lp18\nS'orderedDomain'\np19\nasS'selectionPolygons'\np20\n(lp21\nsS'time'\np22\nF1211392224.7030001\nsS'values'\np23\n(dp24\nS'attrLabel'\np25\n(S'no'\nI6\ntp26\nsS'attrX'\np27\n(S'R_frekvenca'\nI1\ntp28\nsS'attrShape'\np29\n(S''\nI-1\ntp30\nsS'attrSize'\np31\n(S''\nI-1\ntp32\nsS'attrY'\np33\n(S'dolzina'\nI1\ntp34\nssS'encodedDomain'\np35\n(dp36\nS'dolzina'\np37\nI1\nsS'R_frekvenca'\np38\nI1\nsS'no'\np39\nI6\nssba(iOWContexts\nContext\np40\n(dp41\ng17\n(lp42\ng19\nasg20\n(lp43\nsg22\nF1211391305.437\nsg23\n(dp44\ng25\n(S'no'\nI6\ntp45\nsg27\n(S'frekvenca'\nI1\ntp46\nsg29\n(S'dolzina'\nI1\ntp47\nsg31\n(S''\nI-1\ntp48\nsg33\n(S'dolzina'\nI1\ntp49\nssg35\n(dp50\nS'frekvenca'\np51\nI1\nsS'dolzina'\np52\nI1\nsS'no'\np53\nI6\nssbasS'showProbabilitiesDetails'\np54\nI0\nsS'graph.jitterSize'\np55\nI5\nsS'graph.showProbabilities'\np56\nI0\nsS'graph.showXaxisTitle'\np57\nI1\nsS'widgetShown'\np58\nI0\nsS'graph.showLegend'\np59\nI1\nsS'graph.showYLaxisTitle'\np60\nI1\nsS'toolbarSelection'\np61\nI0\nsS'widgetHeight'\np62\nI550\nsS'colorSettings'\np63\nNsS'VizRankLearnerName'\np64\nNs.&quot;, 'Data Table': &quot;(dp1\nS'widgetShown'\np2\nI0\nsS'widgetHeight'\np3\nI480\nsS'widgetXPosition'\np4\nI316\nsS'widgetWidth'\np5\nI640\nsS'widgetYPosition'\np6\nI242\ns.&quot;, 'File': &quot;(dp1\nS'widgetHeight'\np2\nI134\nsS'widgetXPosition'\np3\nI477\nsS'widgetYPosition'\np4\nI415\nsS'widgetShown'\np5\nI0\nsS'widgetWidth'\np6\nI318\nsS'recentFiles'\np7\n(lp8\nS'C:/projekti/k-dule/podatki.tab'\np9\naS'C:/Python25/Lib/site-packages/orange/doc/datasets/iris.tab'\np10\nas.&quot;}"/>
+</schema>

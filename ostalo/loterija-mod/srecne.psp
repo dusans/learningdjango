@@ -1,0 +1,284 @@
+<%
+import sqlite3, time, re
+from mod_python import Session 
+
+#==== PODATKI O UPORABNIKU ====
+sess = Session.Session(req)
+idUpor = -1; uporIme = datumR = ""
+if not sess.is_new():
+    sess.load()
+    idUpor = str(sess.get('uporId', -1))
+    uporIme = str(sess.get('uporIme', ''))
+    datumR = str(sess.get('datumR', ''))
+
+
+
+#==== PODATKI ====
+def getData():
+	#==== Dobi podatke iz DB ====
+	conn = sqlite3.connect("/var/www/ora/ora_mod_python/ora31/semi.db")
+	c = conn.cursor()
+	c.execute("SELECT id, stevilke FROM srecne WHERE idUpor='"+str(idUpor)+"'") #WHERE idUpor='"+idUpor+"'
+	lotoB = c.fetchall()
+	
+	c.close()
+	conn.close()
+	return lotoB
+
+podatki = getData()
+
+#==== TABELA ZA JAVASCRIPT ====
+JSpodatki = str(dict(getData()))
+JSpodatki = JSpodatki.replace("u","")
+if idUpor == -1:
+%>
+    Za uporabo se morate logirat: <a href="login.html" class="style1">Login</a>
+%>
+<%
+else:
+%>
+<script>
+//==== JAVASCRIPT ====
+var podatki = <%=JSpodatki%>
+
+function validate() {
+	if( (_("stevila").value).replace(/\[(\d+\s*,?\s*)*\]$/g,"") != "" ) {
+		alert("Vnesite pravilen seznam stevil... npr: [1,2,3]")
+		return false
+	}
+	if( (_("srecnaV").value).replace(/\[(\d+\s*,?\s*)*\]$/g,"") != "" && _("srecnaV").value != "") {
+		alert("Vnesite vaso pravilno kombinacijo... npr: [1,2,3]")
+		return false
+	}
+	
+	return true	
+}
+function has(a, b) {
+    for (i in a){
+        if (a[i]==b) 
+        return true;
+    }
+    return false;
+}
+
+function got4(a, b) {
+    koliko = 0
+    for (i in a)
+        if (has(b, a[i]))
+            koliko++
+    return koliko > 3 ? true : false
+}
+function gotOne(a, b) {
+    for (i in a)
+        if (has(b, a[i]))
+            return true
+    return false
+}
+function eval2(evaluateIt) {
+    return eval(evaluateIt.replace(/0(?=[1-9])/g,""))
+}
+function filteredData() {
+    var filtered = podatki
+    
+    if(stevila.value != "" && validate()) {
+        foo = {}
+        var j = 0
+        if(aliIn.checked)  {
+            for(j in filtered) {
+                //console.log("stevila.value: "+  eval(stevila.value) +", filtered[j][1]: "+ eval(filtered[j]) +" ")
+                if (  got4( eval(stevila.value), eval(filtered[j]) )  ) {
+                    //console.log("J: "+ j +", + foo[j]: "+  foo[j] +"filtered[j]: "+ eval(filtered[j])+" ")
+                    foo[j] = filtered[j]
+                    }
+            }
+        }
+        else {
+            for(j in filtered) {
+                //console.log("stevila.value: "+  eval(stevila.value) +", filtered[j][1]: "+ eval(filtered[j]) +" ")
+                if (  gotOne( eval(stevila.value), eval(filtered[j]) )  ) {
+                    //console.log("J: "+ j +", + foo[j]: "+  foo[j] +"filtered[j]: "+ eval(filtered[j])+" ")
+                    foo[j] = filtered[j]
+                    }
+            }
+        }
+        //console.log(foo)
+        filtered = foo
+    }
+    
+    return filtered
+}
+function getTable() {
+    lotorija = filteredData()
+    string = '<table border="1" align="center" cellpadding="3" cellspacing="0" bordercolor="#FFFFFF">\n'
+    string += '<tr> \n<td> <b>ID</b> </td> \n<td> <b>Stevilke</b> </td>\n'    
+
+    for (i in lotorija) {
+            string += '<tr>\n'
+            string += '<td>'+i+'</td>\n'
+            string += '<td>'+(lotorija[i])+'</td>\n'
+            string += '<td><input type="button" id="odsVse" onclick="odstraniVse('+i+')" value="x"  width="7" height="7"></td>\n'
+            string += '</tr>\n'
+    }
+    string += '</table>\n'
+
+    vsebina.innerHTML = string
+    return string    
+}
+function dodajVSlovar(string) {
+    string = string.split(":")
+
+    if (string.length == 2) {
+        podatki[string[0]] = string[1]
+    }    
+}
+function _(ime) {
+    return document.getElementById(ime)
+}
+function createQuery(){
+    var foo = new Array();
+    f = form1.elements
+    for (i in f) {
+        if( f[i].name != "" && f[i].value != ""  && f[i].name != "undefined" )
+            foo.push( f[i].name+"="+encodeURIComponent(f[i].value) )
+        //alert(i)
+    }
+    alert(foo.join("&"))
+}
+function ajax()
+  {
+  var xmlHttp;
+    xmlHttp=new XMLHttpRequest();
+    xmlHttp.onreadystatechange=function()
+      {
+      if(xmlHttp.readyState==4)	{
+        vsebina.innerHTML=xmlHttp.responseText;
+        }
+      }
+    url = "prvi.psp?od=" + od.value + "&do=" + _("do").value 
+    url +=  "&stevila=" + encodeURIComponent(stevila.value) 
+    url +=  "&sedmica=" + sedmica.checked + "&aliIn=" + aliIn.checked
+    url +=  "&aliAjax=True"
+    xmlHttp.open("GET", url, true);
+    xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    //xmlHttp.onreadystatechange=stateChanged;
+    //xmlHttp.setRequestHeader("Content-Length", "113495");
+        
+
+    //od=1.1.2007&do=12.1.2007&stevila=&sedmica=True
+    xmlHttp.setRequestHeader("od", encodeURIComponent(od.value));
+    xmlHttp.setRequestHeader("do", encodeURIComponent(_("do").value));
+    xmlHttp.setRequestHeader("stevila", encodeURIComponent(stevila.value));
+    xmlHttp.setRequestHeader("sedmica", sedmica.checked);
+    xmlHttp.setRequestHeader("aliIn", aliIn.checked);
+	xmlHttp.setRequestHeader("aliAjax", "True");
+	xmlHttp.send(null); //createQuery()
+
+}
+function srecna22() {
+ var xmlHttp2;
+    xmlHttp2=new XMLHttpRequest();
+    xmlHttp2.onreadystatechange=function()
+      {
+      if(xmlHttp2.readyState==4)	{
+        dodaj = xmlHttp2.responseText;
+        _("srecnaV").value=dodaj
+
+        }
+      }
+    url = "admin.py/srecna?datumR=<%=datumR%>"
+    xmlHttp2.open("GET", url, true);
+    xmlHttp2.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+	xmlHttp2.send(null); //createQuery()
+}
+function srecnaAJAX(dodajKURL)
+{
+ var xmlHttp3;
+    xmlHttp3=new XMLHttpRequest();
+    xmlHttp3.onreadystatechange=function()
+      {
+      if(xmlHttp3.readyState==4)	{
+        dodaj = xmlHttp3.responseText;
+        //alert(dodaj)
+        _("srecnaV").value=dodaj.split(":")[1]
+        
+        dodajVSlovar(dodaj)
+        getTable()
+        }
+      }
+    url = "admin.py/srecna?datumR=<%=datumR%>&srecne=True"+dodajKURL
+    xmlHttp3.open("GET", url, true);
+    xmlHttp3.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+	xmlHttp3.send(null);
+}
+function odstraniVse(odstraniId) {
+ var xmlHttp4;
+    xmlHttp4=new XMLHttpRequest();
+    xmlHttp4.onreadystatechange=function()
+      {
+      if(xmlHttp4.readyState==4)	{
+        response = xmlHttp4.responseText;
+        //alert(response)
+        delete podatki[response]
+        getTable()
+        }
+      }
+    url = "admin.py/removeVseSrecne?id="+odstraniId
+    xmlHttp4.open("GET", url, true);
+    xmlHttp4.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+	xmlHttp4.send(null);
+}
+onload=getTable
+</script>
+<style type="text/css">
+    <!--
+    body {
+        background-color: #3779AF;
+    }
+    body,td,th {
+        font-family: Verdana, Arial, Helvetica, sans-serif;
+        font-size: 12px;
+        color: #FFDB4C;
+}
+.style1 {color: #FFFFFF}
+.style2 {font-size: 10px;}
+-->
+</style>
+<form id="form1" name="form1" action="prvi.psp" method="GET">
+<div align="center"><img src="header.jpg" width="338" height="71"></div>
+<table width="400" border="1" align="center" cellpadding="3" cellspacing="0" bordercolor="#FFFFFF" aligh="center">
+  <tr align="center">
+	<td>    <a href="index.html" class="style1">Domov</a>
+                <a href="prvi.psp" class="style1">Sedanjost</a>
+                <a href="zgodovina.psp" class="style1">Zgodovina</a>
+                <a href="getData.psp" class="style1">Osvezi</a>
+                <a href="srecne.psp" class="style1">Moje Srecne</a>
+  </tr>
+  <tr align="center">
+	<td> <small>Tu imate moznost da vodite evidenco svojih kombinacij. Lahko zahtevate vaso srecno ali pa vnesete svojo kombinacijo.
+             Ko bo izzrebana kombinacija jo preprosto vnesite v polje Stevila in ko stisnite Preveri boste zvedeli ali ste kaj zadeli :D</small>
+  </tr>
+  <tr align="center">
+	<td>Zdravo <%=uporIme%> ; 
+         <input name="srecnaV" class="style2" type="text" id="srecnaV" size="21">
+         <input type="button" id="srecna" onclick="if(validate()) {srecnaAJAX('')}" value="Srecna">
+         <input type="button" id="svoja" onclick="if(validate() && srecnaV.value != '') {srecnaAJAX('&podaneStevilke='+srecnaV.value)}" value="Dodaj svojo"></td>
+  </tr>
+  <tr align="center">
+	<td>
+		Stevila: <input type="text" name="stevila" id="stevila">
+		Logicni In: <input type="checkbox" name="aliIn" id="aliIn" value="True" checked>
+        <input type="button" name="preveri" id="preveri" onclick="getTable()" value="Preveri" > 
+         </td>
+  </tr>
+  <tr align="center">
+	<td><a href="admin.py/removeVseSrecne" class="style1">Odstrani vse</a></td>
+  </tr>
+</table>
+
+<div align="center" id="vsebina">
+
+</div>
+</form>
+<%
+
+%>
