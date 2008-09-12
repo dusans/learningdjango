@@ -8,5 +8,5 @@ class FilterDraw(forms.Form):
     numbers = forms.CharField(max_length=200)
 
 class LuckyForm(forms.Form):
-    lucky = forms.CharField()
+    lucky = forms.CharField(required=False)
     check = forms.CharField()
