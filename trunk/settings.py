@@ -62,7 +62,7 @@ TEMPLATE_LOADERS = (
 
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'dusan.smitran@gmail.com'
-EMAIL_HOST_PASSWORD = 'vipergts'
+EMAIL_HOST_PASSWORD = ''
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
@@ -80,7 +80,6 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.doc.XViewMiddleware',
-    'pagination.middleware.PaginationMiddleware',
 )
 
 ROOT_URLCONF = 'prviDjango.urls'
@@ -95,7 +94,6 @@ TEMPLATE_DIRS = (
     "c:/projekti/prviDjango/templates",
     "c:/projekti/prviDjango/photologue/templates",
     "c:/projekti/prviDjango/photologue/templates/photologue",
-
 )
 
 INSTALLED_APPS = (
@@ -106,8 +104,6 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'polls',
     'lottery',
-    'pagination',
     'registration',
     'simpleLogin',
-    'photologue',
 )
