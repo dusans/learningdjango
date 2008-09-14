@@ -1,0 +1,32 @@
+<p>
+    <a href="/q3demotube/demo_list/">Demo List</a>
+    <a href="/q3demotube/">Add Demo</a>
+</p>
+
+<p>Demo {{ demo.name }} -- {{ demo.demo.name }}</p>
+<table border="1">
+<tr>
+    <th><b>Name</b></th>
+    <th><b>Time</b></th>
+    <th><b>Start</b></th>
+    <th><b>End</b></th>
+    <th><b>Description</b></th>
+    <th><b>Has_images</b></th>
+    <th><b>Has_video</b></th>
+    <th><b>#Edit times</b></th>
+</tr>
+{% for t in timeList  %}
+<tr>
+    <td> {{ t.name }}</td>
+    <td> {{ t.time }}</td>
+    <td> {{ t.start }}</td>
+    <td> {{ t.end }}</td>
+    <td> {{ t.description }}</td>
+    <td> {{ t.has_images }}</td>
+    <td> {{ t.has_video }}</td>
+    <td> <a href="/q3demotube/edit_times/{{ t.id }}/">#</a></td>
+</tr>
+{% endfor %}
+</table>
+
+<p><a href="/q3demotube/get_images/{{ demo.id }}/">Get Images</a></p>

@@ -1,0 +1,25 @@
+<p>
+    <a href="/q3demotube/demo_list/">Demo List</a>
+    <a href="/q3demotube/">Add Demo</a>
+</p>
+
+<table border="1">
+<tr>
+    <th><b>Demo</b></th>
+    <th><b>Name</b></th>
+    <th><b>Category</b></th>
+    <th><b>User</b></th>
+    <th><b>#Frags</b></th>
+    <th><b>#Edit Frags</b></th>
+</tr>
+{% for d in demos  %}
+<tr>
+    <td> {{ d.demo }}</td>
+    <td> {{ d.name }}</td>
+    <td> {{ d.category.name }}</td>
+    <td> {{ d.user.username }}</td>
+    <td> {{ d.video_set.count }}</td>
+    <td> <a href="/q3demotube/times/{{ d.id }}/">#</a></td>
+</tr>
+{% endfor %}
+</table>
