@@ -1,0 +1,16 @@
+<p>
+    <a href="/q3demotube/demo_list/">Demo List</a>
+    <a href="/q3demotube/">Add Demo</a>
+</p>
+
+<form action="/q3demotube/add_demo" method="POST" enctype="multipart/form-data">
+    {{ demoForm.as_p }}
+    <div>
+        {{ videoForm.management_form }}
+
+        {% for form in videoForm.forms  %}
+            {{ form.as_p }}
+        {% endfor %}
+    </div>
+<input type="Submit" value="Submit">
+</form>
