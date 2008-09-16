@@ -1,4 +1,5 @@
 <p>
+    <a href="/q3demotube/videos/">Videos</a>
     <a href="/q3demotube/demo_list/">Demo List</a>
     <a href="/q3demotube/">Add Demo</a>
 </p>
@@ -7,7 +8,7 @@
     {{ demoForm.as_p }}
     <div>
         {{ videoForm.management_form }}
-
+        Format: <b>00:00:00 hours:minutes:seconds</b>
         {% for form in videoForm.forms  %}
             {{ form.as_p }}
         {% endfor %}

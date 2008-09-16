@@ -2,61 +2,157 @@ import shutil
 import os
 from q3demotube.models import *
 from datetime import time, timedelta
+from django.conf import settings
 
 #c = Category(name='First Category')
 #d = Demo.objects.all()
 
-demo_id = 8
+
+def getSec(t):
+    return timedelta(hours=t.hour, minutes=t.minute, seconds=t.second).seconds
+
+def addSec(t, n):
+    sec = getSec(t) + n
+    return time(sec / 3600, sec / 60, sec % 60)
 
 q3mmeDir = "c:/Igre/q3/mme"
 q3Dir = "c:/Igre/q3"
-#==== ==== ==== ====
-# COPY
-#==== ==== ==== ====
-demo = Demo.objects.get(pk=demo_id)
-ext = demo.demo.path.split(".")[-1]
-#start = str(i.start).replace(":", ".")
+virtualDubDir = "c:/Program Files/VirtualDub"
+#demo_id = 1
 
-shutil.copy2(demo.demo.path, "%s/demos/%s-demo.%s" % (q3mmeDir, demo_id, ext))
-#==== ==== ==== ====
-# PROJECT
-#==== ==== ==== ====
-project = open("project.cfg").read()
-os.chdir("%s/project" % (q3mmeDir))
-try:
-    os.mkdir("%s-demo" % demo_id)
-except:
-    print "Dir already existes"
+def setMME(demo_id, demo, videos, quality, wav, fps, capType="images"):
+    #==== ==== ==== ====
+    # COPY DEMO
+    #==== ==== ==== ====
+    ext = demo.demo.path.split(".")[-1]
+    shutil.copy2(demo.demo.path, "%s/demos/%s-%s.%s" % (q3mmeDir, demo_id, capType, ext))
+    #==== ==== ==== ====
+    # CREATE PROJECT
+    #==== ==== ==== ====
+    project = open("%s/project.cfg" % (q3mmeDir)).read()
+    os.chdir("%s/project" % (q3mmeDir))
 
-for i in demo.video_set.all():
-    start = timedelta(minutes=i.start.minute, seconds=i.start.second).seconds * 1000
-    end = (timedelta(minutes=i.end.minute, seconds=i.end.second).seconds + 15) * 1000
+    try:
+        os.mkdir("%s-%s" % (demo_id, capType))
+    except:
+        print "Dir already existes"
 
-    projectXML = project % (start , end, 4)
-    o = open("%s/project/%s-demo/%s.cfg" % (q3mmeDir, demo_id, i.id), "w")
-    o.write(projectXML)
+    for video in videos:
+        if capType == "images":
+            start = getSec(addSec(video.time, -20)) * 1000
+            end = getSec(addSec(video.time, 25)) * 1000
+        else:
+            start = getSec(video.start) * 1000
+            end = getSec(video.end) * 1000
+
+        projectXML = project % (start, end, fps, quality, wav)
+        o = open("%s/project/%s-%s/%s.cfg" % (q3mmeDir, demo_id, capType, video.id), "w")
+        o.write(projectXML)
+        o.close()
+
+    #==== ==== ==== ====
+    # DEMO LIST
+    #==== ==== ==== ====
+    o = open("%s/%s-demolist.txt" % (q3mmeDir, demo_id), "w")
+    for video in videos:
+        o.write('"/%s-%s" "%s"\n' % (demo_id, capType, video.id))
     o.close()
 
 #==== ==== ==== ====
-# DEMO LIST
+# GET IMAGES WITH MME
 #==== ==== ==== ====
-#"/DUEL/44-xgo-3.55_3xRG_9.10_NICE_MIDAIR-vs-d0Be-cpm3a" "cpm3a3xRG"
-o = open("%s/%s-demolist.txt" % (q3mmeDir, demo_id), "w")
-for v in demo.video_set.all():
-    o.write('"/%s-demo" "%s"\n' % (demo_id, v.id))
-o.close()
+def getMMEImages(demo_id, capType="images"):
+    #==== ==== ==== ====
+    # START
+    #==== ==== ==== ====
+    demo = Demo.objects.get(pk=demo_id)
+    videos = demo.video_set.filter(has_images=False)
 
-#==== ==== ==== ====
-# RUN CAPTURE
-#==== ==== ==== ====
-os.chdir("%s" % (q3Dir))
-#run = '''ffmpeg -i "%s" -f mp4 -vcodec mpeg4 -b %s  -r %s -s %s -acodec libfaac -threads 2 -ar 24000 -ab 192000 -ac 2 "%s"''' % (movie, bitrate, fps, r, movieName)
-run = '''quake3mme.exe +set fs_game "mme" +set mme_renderWidth "640" +set mme_renderHeight "480"
-        +set r_multisample "0" +set r_multisampleNvidia "0" +set r_anisotropy "0"
-        +set fs_extraGames "osp" +set r_picmip "0" +set r_picmip "0" +exec "low.cfg"
-        +demolist "%s-demolist.txt"''' % (demo_id)
+    #==== ==== ==== ====
+    # SET MME
+    #==== ==== ==== ====
+    setMME(demo_id, demo, videos, quality=25, wav=0, fps=4, capType=capType)
 
-print run
-#os.system('%s &' % run)
+    #==== ==== ==== ====
+    # RUN CAPTURE
+    #==== ==== ==== ====
+    os.chdir("%s" % (q3Dir))
+    run = '''quake3mme.exe +set fs_game "mme" +set mme_renderWidth "640" +set mme_renderHeight "480" +set r_multisample "0" +set r_multisampleNvidia "0" +set r_anisotropy "0" +set fs_extraGames "osp" +set r_picmip "0" +set r_picmip "0" +exec "low.cfg" +demolist "%s-demolist.txt"''' % (demo_id)
+    print run
+
+    os.system('%s &' % run)
+
+    #==== ==== ==== ====
+    # COPY + DELETE
+    #==== ==== ==== ====
+    capture = os.listdir('%s/mme/capture/%s-%s' % (q3Dir, demo_id, capType))
+
+    for video in videos:
+        for image in capture:
+            if image.startswith('%s.' % video.id):
+                shutil.copy2("%s/capture/%s-%s/%s" % (q3mmeDir, demo_id, capType, image), "%sq3/images/%s" % (settings.MEDIA_ROOT, image))
+
+        for image in capture:
+            if image.startswith('%s.' % video.id):
+                os.remove("%s/capture/%s-%s/%s" % (q3mmeDir, demo_id, capType, image))
 
 
+    for video in videos:
+        video.has_images = True
+        video.save()
+
+def getMMEVideos(demo_id, capType="videos"):
+    #==== ==== ==== ====
+    # START
+    #==== ==== ==== ====
+    demo = Demo.objects.get(pk=demo_id)
+    videos = demo.video_set.filter(has_video=False)
+
+    #==== ==== ==== ====
+    # SET MME
+    #==== ==== ==== ====
+    setMME(demo_id, demo, videos, quality=100, wav=1, fps=30, capType=capType)
+
+    #==== ==== ==== ====
+    # RUN CAPTURE
+    #==== ==== ==== ====
+    os.chdir("%s" % (q3Dir))
+    run = '''quake3mme.exe +set fs_game "mme" +set mme_renderWidth "640" +set mme_renderHeight "480" +set r_multisample "0" +set r_multisampleNvidia "0" +set r_anisotropy "0" +set fs_extraGames "osp" +set r_picmip "0" +set r_picmip "0" +exec "low.cfg" +demolist "%s-demolist.txt"''' % (demo_id)
+    print run
+    os.system('%s &' % run)
+
+    capture = os.listdir('%s/mme/capture/%s-%s' % (q3Dir, demo_id, capType))
+    #==== ==== ==== ====
+    # CREATE VIDEO - VIRTUAL DUB
+    #==== ==== ==== ====
+    os.chdir("%s" % (virtualDubDir))
+    script = open("defaultVDFlv.txt").read()
+
+    for video in videos:
+        #==== ==== ==== ====
+        # CREATE DUB SCRIPT
+        #==== ==== ==== ====
+        firstImage = [i for i in capture if i.startswith("%s." %video.id) and i.endswith(".jpg")][0]
+        wavFile = [i for i in capture if i == "%s.wav" % video.id][0]
+        outFile = "%sq3/videos/%s.flv" % (settings.MEDIA_ROOT, video.id)
+        scriptOut = script % (  "%s/capture/%s-%s/%s" % (q3mmeDir, demo.id, capType, firstImage) ,
+                                "%s/capture/%s-%s/%s" % (q3mmeDir, demo.id, capType, wavFile),
+                                outFile)
+
+        open("VirtualDubMod.jobs", "w").write(scriptOut)
+        #==== ==== ==== ====
+        # RUN DUB SCRIPT
+        #==== ==== ==== ====
+        run = "vdub.exe /s VirtualDubMod.jobs"
+        print run
+        #os.system('%s &' % run)
+
+        video.has_video = True
+        #video.save()
+
+    #==== ==== ==== ====
+    # REMOVE
+    #==== ==== ==== ====
+    for f in capture:
+        if f.endswith(".jpg") or f.endswith(".wav"):
+            pass #  os.remove("%s/capture/%s-%s/%s" % (q3mmeDir, demo_id, capType, f))

@@ -16,3 +16,9 @@ class VideoForm(ModelForm):
     class Meta:
         model = Video
         fields = ('time',)
+
+
+class VideoTimeForm(ModelForm):
+    class Meta:
+        model = Video
+        fields = ('start', 'end',)

@@ -1,8 +1,8 @@
 <p>
+    <a href="/q3demotube/videos/">Videos</a>
     <a href="/q3demotube/demo_list/">Demo List</a>
     <a href="/q3demotube/">Add Demo</a>
 </p>
-
 <p>Demo {{ demo.name }} -- {{ demo.demo.name }}</p>
 <table border="1">
 <tr>
@@ -24,9 +24,12 @@
     <td> {{ t.description }}</td>
     <td> {{ t.has_images }}</td>
     <td> {{ t.has_video }}</td>
-    <td> <a href="/q3demotube/edit_times/{{ t.id }}/">#</a></td>
+    <td> <a href="/q3demotube/edit_time/{{ t.id }}/">#</a></td>
 </tr>
 {% endfor %}
 </table>
 
-<p><a href="/q3demotube/get_images/{{ demo.id }}/">Get Images</a></p>
+<p>
+    <a href="/q3demotube/get_images/{{ demo.id }}/">Get Images</a>
+    <a href="/q3demotube/get_videos/{{ demo.id }}/">Get Videos</a>
+</p>

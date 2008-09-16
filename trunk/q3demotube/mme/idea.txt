@@ -1,0 +1,29 @@
+Im making q3demotube
+U upload demo and set time then u can get images for thisto specify the time more accurately
+Next thing is make video out of it people can rate and comment the frags and movie maker can get demos + demolist
+
+
+[18:20] (masta-) got.own3d.eu
+[18:20] (masta-) user:fxp
+[18:20] (masta-) pass: fxpwnd
+
+`img%03d.jpg' means the sequence `img001.jpg', `img002.jpg', etc... 
+4.0000000540.jpg
+
+
+[18:08] (masta-) ffmpeg -y -i "$1" -acodec libfaac -ab 128k -vcodec libx264 -b 1500k -s 1280x720 -flags +loop -cmp +chroma -partitions +parti4x4+partp8x8+partb8x8 -flags2 +mixed_refs -me umh -subq 5 -trellis 1 -refs 3 -bf 3 -b_strategy 1 -coder 1 -me_range 16 -g 250 -keyint_min 25 -sc_threshold 40 -i_qfactor 0.71 -bt 384k -rc_eq 'blurCplx^(1-qComp)' -qcomp 0.8 -qmin 10 -qmax 51 -qdiff 4 "$4"
+[18:08] (masta-) "$1" = inputfile
+[18:08] (masta-) "$4" = outputfile
+
+
+[18:11] (masta-) MP4Box -tmp c:/ -inter 300 c:/LightTPD/htdocs/q3/videos/5.mp4 -out c:/neki.mp4
+[18:11] (masta-) $4 = yourfile
+
+
+C:\Program Files\megui\tools\ffmpeg>ffmpeg -y -i "c:\Igre\q3\mme\capture\3-videos\5.%010d.jpg" -i "c:\Igre\q3\mme\capture\3-videos\5.wav"  -acodec libfaac -ab 128k -vcodec libx264 -b 600k -s 320x240 -r 30 "c:\LightTPD\htdocs\q3\videos\5.mp4"
+
+ffmpeg -y -i "c:\Igre\q3\mme\capture\3-videos\4.%010d.jpg" -i "c:\Igre\q3\mme\capture\3-videos\4.wav" -acodec libfaac -ab 128k -vcodec libx264 -b 1500k -s 640x480 -r 30 -flags +loop -cmp +chroma -partitions +parti4x4+partp8x8+partb8x8 -flags2 +mixed_refs -me umh -subq 5 -trellis 1 -refs 3 -bf 3 -b_strategy 1 -coder 1 -me_range 16 -g 250 -keyint_min 25 -sc_threshold 40 -i_qfactor 0.71 -bt 384k  -qcomp 0.8 -qmin 10 -qmax 51 -qdiff 4 "c:\LightTPD\htdocs\q3\videos\foo.mp4"
+
+
+
+C:\Program Files\megui\tools\mp4box>MP4Box -tmp c:/ -inter 300 c:/LightTPD/htdocs/q3/videos/5.mp4
