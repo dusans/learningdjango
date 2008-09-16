@@ -1,15 +1,14 @@
-from q3demotube.forms import DemoForm, VideoForm
+from q3demotube.forms import DemoForm, VideoForm, VideoTimeForm
 from django.shortcuts import render_to_response
 from django.http import HttpResponse
 from django.forms.formsets import formset_factory
 from django.contrib.auth.decorators import login_required
 from q3demotube.models import Demo, Video
 from datetime import time, timedelta
-# Create your views here.
+from django.conf import settings
+from q3demotube.q3demo import addSec, getSec, getMMEImages, getMMEVideos
 
-def addSeconds(t, n):
-    td = timedelta(seconds=(t.minute * 60) + (t.second)) + timedelta(seconds=n)
-    return time(td.seconds / 3600, td.seconds / 60, td.seconds % 60)
+# Create your views here.
 
 @login_required
 def add_demo(request):
@@ -29,8 +28,8 @@ def add_demo(request):
                     #print "video.is_valid()", video.is_valid()
                     v = video.save(commit=False)
                     v.demo_id = d.id
-                    v.start = addSeconds(v.time, -10)
-                    v.end = addSeconds(v.time, 8)
+                    v.start = addSec(v.time, -10)
+                    v.end = addSec(v.time, 8)
                     v.save()
         else:
             #print "foo"
@@ -45,6 +44,9 @@ def demo_list(request):
     demos = Demo.objects.all()
     return render_to_response('q3demotube/demo_list.html', {'demos': demos})
 
+def videos(request):
+    videos = Video.objects.filter(has_video=True)
+    return render_to_response('q3demotube/videos.html', {'videos': videos, 'MEDIA_URL': settings.MEDIA_URL})
 
 def times(request, demo_id):
     timeList = Video.objects.filter(demo=demo_id)
@@ -52,7 +54,30 @@ def times(request, demo_id):
     return render_to_response('q3demotube/times.html', {'timeList': timeList, 'demo': demo})
 
 def get_images(request, demo_id):
-    videos = Video.objects.filter(demo=demo_id)
-    for video in videos:
-        if not video.has_images:
-            pass
+    demo = Demo.objects.get(pk=demo_id)
+    if demo.video_set.filter(has_images=False).count():
+        getMMEImages(demo_id)
+    return times(request, demo_id)
+
+def get_videos(request, demo_id):
+    demo = Demo.objects.get(pk=demo_id)
+    if demo.video_set.filter(has_video=False).count():
+        getMMEVideos(demo_id)
+    return times(request, demo_id)
+
+def edit_time(request, video_id=0):
+    video = Video.objects.get(pk=video_id)
+    start = addSec(video.time, -20)
+
+    if request.POST:
+        timeForm = VideoTimeForm(request.POST, instance=video)
+        if timeForm.is_valid():
+            timeForm.save()
+    else:
+        timeForm = VideoTimeForm({'start': video.start, 'end': video.end})
+
+    images = [(str(addSec(start, i / 4)), "0" * (10 - len(str(i))) + str(i)) for i in range(180)]
+
+    return render_to_response('q3demotube/edit_time.html', {'images': images, 'MEDIA_URL': settings.MEDIA_URL,
+                                                            'demo_id': video.demo.id, 'timeForm': timeForm,
+                                                            'videoTime': str(video.time), 'video': video})

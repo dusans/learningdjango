@@ -1,0 +1,20 @@
+<p>
+    <a href="/q3demotube/videos/">Videos</a>
+    <a href="/q3demotube/demo_list/">Demo List</a>
+    <a href="/q3demotube/">Add Demo</a>
+</p>
+
+{% for video in videos  %}
+<div>
+    <p>Demo {{ video.demo.name }} -- {{ video.demo.demo.name }}</p>
+    <p>Name {{ video.name }} | Start: {{ video.start }} End: {{ video.end }}</p>
+    <p>Time: {{ video.time }}</p>
+    <embed id="{{ video.id }}" height="240" width="320" flashvars="fullscreen=true&file={{ MEDIA_URL }}q3/videos/{{ video.id }}.flv&stretching=uniform&quality=true&width=320&height=240" allowfullscreen="true" allowscriptaccess="always" quality="high" name="{{ video.id }}" style="" src="{{ MEDIA_URL }}flash/player.swf" type="application/x-shockwave-flash"/>
+</div>
+
+
+
+{% endfor %}
+
+
+
