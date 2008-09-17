@@ -20,9 +20,15 @@ Next thing is make video out of it people can rate and comment the frags and mov
 [18:11] (masta-) $4 = yourfile
 
 
-C:\Program Files\megui\tools\ffmpeg>ffmpeg -y -i "c:\Igre\q3\mme\capture\3-videos\5.%010d.jpg" -i "c:\Igre\q3\mme\capture\3-videos\5.wav"  -acodec libfaac -ab 128k -vcodec libx264 -b 600k -s 320x240 -r 30 "c:\LightTPD\htdocs\q3\videos\5.mp4"
+C:\Program Files\megui\tools\ffmpeg>
 
-ffmpeg -y -i "c:\Igre\q3\mme\capture\3-videos\4.%010d.jpg" -i "c:\Igre\q3\mme\capture\3-videos\4.wav" -acodec libfaac -ab 128k -vcodec libx264 -b 1500k -s 640x480 -r 30 -flags +loop -cmp +chroma -partitions +parti4x4+partp8x8+partb8x8 -flags2 +mixed_refs -me umh -subq 5 -trellis 1 -refs 3 -bf 3 -b_strategy 1 -coder 1 -me_range 16 -g 250 -keyint_min 25 -sc_threshold 40 -i_qfactor 0.71 -bt 384k  -qcomp 0.8 -qmin 10 -qmax 51 -qdiff 4 "c:\LightTPD\htdocs\q3\videos\foo.mp4"
+ffmpeg -y -r 30 -i "c:\Igre\q3\mme\capture\8-videos\11.%010d.jpg" -i "c:\Igre\q3\mme\capture\8-videos\11.wav" -r 30 -acodec libfaac -ab 128k -vcodec libx264 -b 600k -s 512x240  "c:\LightTPD\htdocs\q3\videos\11.mp4"
+
+ffmpeg.exe -y -r 30 -i "c:/Igre/q3/mme/capture/7-videos/10.%010d.jpg" -i "c:/Igre/q3/mme/capture/7-videos/10.wav" -r 30
+                    -acodec libfaac -ab 128k -vcodec libx264 -b
+                    600k -s 512x240  "c:/LightTPD/htdocs/q3/videos/10.mp4"
+
+ffmpeg -y -i "c:\Igre\q3\mme\capture\8-videos\11.%010d.jpg" -i "c:\Igre\q3\mme\capture\8-videos\11.wav" -acodec libfaac -ab 128k -vcodec libx264 -b 600k -s 512x240 -r 30 -flags +loop -cmp +chroma -partitions +parti4x4+partp8x8+partb8x8 -flags2 +mixed_refs -me umh -subq 5 -trellis 1 -refs 3 -bf 3 -b_strategy 1 -coder 1 -me_range 16 -g 250 -keyint_min 25 -sc_threshold 40 -i_qfactor 0.71 -bt 384k  -qcomp 0.8 -qmin 10 -qmax 51 -qdiff 4 "c:\LightTPD\htdocs\q3\videos\11.mp4"
 
 
 

@@ -27,6 +27,9 @@ class Video(models.Model):
     def __unicode__(self):
         return "%s - %s - %s" % (self.demo.demo.url, self.name, self.time)
 
+    def can_be_captured(self):
+        return (self.end.minute * 60 + self.end.second) - (self.start.minute * 60 + self.start.second) <=  30
+
 class VideoRating(models.Model):
     user = models.ForeignKey(User)
     video = models.ForeignKey(Video)
