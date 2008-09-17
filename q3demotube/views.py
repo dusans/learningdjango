@@ -7,7 +7,6 @@ from q3demotube.models import Demo, Video
 from datetime import time, timedelta
 from django.conf import settings
 from q3demotube.q3demo import addSec, getSec, getMMEImages, getMMEVideos
-
 # Create your views here.
 
 @login_required
@@ -33,11 +32,13 @@ def add_demo(request):
                     v.save()
         else:
             #print "foo"
-            return render_to_response('q3demotube/add_demo.html', {'demoForm':demoForm, 'videoForm':videoForm})
+            return render_to_response('q3demotube/add_demo.html', { 'demoForm':demoForm, 'videoForm':videoForm,
+                                                                    'MEDIA_URL': settings.MEDIA_URL})
 
     demoForm = DemoForm()
     videoForm = VideoFormSet()
-    return render_to_response('q3demotube/add_demo.html', {'demoForm':demoForm, 'videoForm':videoForm})
+    return render_to_response('q3demotube/add_demo.html', { 'demoForm':demoForm, 'videoForm':videoForm,
+                                                            'MEDIA_URL': settings.MEDIA_URL})
 
 #@login_required
 def demo_list(request):

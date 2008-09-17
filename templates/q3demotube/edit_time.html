@@ -6,14 +6,12 @@
 </p>
 
 <form action="/q3demotube/edit_time/{{ video.id }}/" method="POST">
-Time:   <input disabled="1" id="time" value="{{ images|first|first }}"/>
-        <input type="button" value="As start" onclick="$('#id_start').val($('#time').val())"/>
-        <input type="button" value="As end" onclick="$('#id_end').val($('#time').val())"/><br/>
 Start: {{ timeForm.start }} End {{ timeForm.end }}
 <input type="Submit" value="Submit">
 </form>
-<p><b>Click progress bar to set Start, Double click to set End!</b></p>
-<img id="theImage" src="{{ MEDIA_URL }}q3/images/{{ demo_id }}.{{ images|first|last }}.jpg"/>
+<p><b>Click progress bar to set Start, Double click to set End!</b> <br/>
+    <b>Max video length = 30 sec</b></p>
+<img align="center" id="theImage" src="{{ MEDIA_URL }}q3/images/{{ demo_id }}.{{ images|first|last }}.jpg"/>
 <div id="navcontainer">
 <ul id="navlist">
 <!--<li id="active"><a href="#" id="current">0</a></li>--!>
@@ -47,5 +45,6 @@ Start: {{ timeForm.start }} End {{ timeForm.end }}
         font-size:8px;
         text-align:center;
         text-decoration:none;
+        align:center;
     }
 </style>

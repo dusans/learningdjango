@@ -6,8 +6,8 @@
 
 <table border="1">
 <tr>
-    <th><b>Demo</b></th>
     <th><b>Name</b></th>
+    <th><b>Demo</b></th>
     <th><b>Category</b></th>
     <th><b>User</b></th>
     <th><b>#Frags</b></th>
@@ -15,8 +15,8 @@
 </tr>
 {% for d in demos  %}
 <tr>
-    <td> {{ d.demo }}</td>
     <td> {{ d.name }}</td>
+    <td> {{ d.demo.name }}</td>
     <td> {{ d.category.name }}</td>
     <td> {{ d.user.username }}</td>
     <td> {{ d.video_set.count }}</td>
