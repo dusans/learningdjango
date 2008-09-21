@@ -1,6 +1,14 @@
 Im making q3demotube
-U upload demo and set time then u can get images for thisto specify the time more accurately
-Next thing is make video out of it people can rate and comment the frags and movie maker can get demos + demolist
+1. U upload demo and set time of frags
+2. then u can get images for frags to specify the time more accurately (start -> end)
+3. Make video out of it people can rate and comment the frags 
+4. Movie maker can get demos + demolist
+
+Movia maker can make a project(like: eswc 2008) people upload it and the demos belong to him, people can rate so he can pick the best ones, or if he chosse to make the project private, so people can only upload, so when the movie is out frags are never before seen
+
+If u have any demo with time i can give u a beta account to test it :)
+
+
 
 
 [18:20] (masta-) got.own3d.eu

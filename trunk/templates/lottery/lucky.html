@@ -31,6 +31,15 @@ function delete_lucky(id) {
 	 })
 }
 
+function rate_video(rated) {
+ $.post("/q3demotube/rate_video/",
+       {video:"43", rate:rated},
+       function(txt)
+         {
+         console.log(data);
+         });
+}
+
 //==== ==== ==== ====
 //GET LUCKY
 //==== ==== ==== ====

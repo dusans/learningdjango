@@ -1,0 +1,91 @@
+{% extends "q3demotube/baseq3.html" %}
+
+{% block content %}
+{% load threadedcommentstags %}
+
+<script type="text/javascript" src="{{ MEDIA_URL }}js/jquery.rating.js"></script>
+<link rel="stylesheet" href="{{ MEDIA_URL }}css/rating.css" />
+
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#starRating').rating('/q3demotube/rate_video/', {object_id: {{ video.id }}, maxvalue: 10, increment:1, curvalue:{{ rated }}});
+});
+</script>
+
+
+<p>
+    <b>Demo: {{ video.demo.name }} -- {{ video.demo.demo.name|slice:":30" }}</b><br/>
+    Name: {{ video.name }}<br/>
+    Time: {{ video.time }} Start: {{ video.start }} End: {{ video.end }}<br/>
+    Views: {{ video.view_set.count }}<br/><br/>
+    <embed id="{{ video.id }}" width="540" height="260" flashvars="fullscreen=true&file={{ MEDIA_URL }}q3/videos/{{ video.id }}.mp4&stretching=uniform&quality=true&width=540&height=260" allowfullscreen="true" allowscriptaccess="always" quality="high" name="{{ video.id }}" style="" src="{{ MEDIA_URL }}flash/player.swf" type="application/x-shockwave-flash"/>
+</p>
+
+<div id="starRating" class="rating">&nbsp;</div> <label id="message"></label><br/>
+<a href="#" onclick="add_favorite()">Favorite!</a>
+
+
+<h3>Comments on This Post:</h3>
+{% get_free_threaded_comment_tree for video as tree %}
+{% for comment in tree %}
+    <div style="margin-left: {{ comment.depth }}em;" class="comment">
+        <a href="{{ comment.website }}">{{ comment.name }}</a> said:<br/>
+        {% auto_transform_markup comment %}
+        <a id="c{{ comment.id }}" href="javascript:show_reply_form('c{{ comment.id }}','{% get_free_comment_url video comment %}','{{ comment.name }}')">Reply</a>
+    </div>
+{% endfor %}
+<p>Reply to Original:</p>
+<form method="POST" action="{% get_free_comment_url video %}">
+    <ul>
+        {% get_free_threaded_comment_form as form %}
+        {{ form.as_ul }}
+        <li><input type="submit" value="Submit Comment" /></li>
+    </ul>
+</form>
+
+
+<script type="text/javascript">
+function show_reply_form(comment_id, url, person_name) {
+    var comment_reply = $('#' + comment_id);
+    var to_add = $( new Array(
+    '<div class="response"><p>Reply to ' + person_name + ':</p>',
+    '<form method="POST" action="' + url + '">',
+    '<ul>',  '{{ form.as_ul|oneline }}',
+    '<li><input type="submit" value="Submit Comment" /></li>',
+    '</ul>', '</form>', '</div>').join(''));
+    to_add.css("display", "none");
+    comment_reply.after(to_add);
+    to_add.slideDown(function() {
+        comment_reply.replaceWith(new Array('<a id="',
+        comment_id,'" href="javascript:hide_reply_form(\'',
+        comment_id, '\',\'', url, '\',\'', person_name,
+        '\')">Stop Replying</a>').join(''));
+    });
+}
+function hide_reply_form(comment_id, url, person_name) {
+    var comment_reply = $('#' + comment_id);
+    comment_reply.next().slideUp(function (){
+        comment_reply.next('.response').remove();
+        comment_reply.replaceWith(new Array('<a id="',
+        comment_id,'" href="javascript:show_reply_form(\'',
+        comment_id, '\',\'', url, '\',\'', person_name,
+        '\')">Reply</a>').join(''));
+    });
+}
+
+function add_favorite() {
+    $.post("/q3demotube/add_favorite/", { 'video_id': {{ video.id }} } ,
+        function(returned_data) { $('#message').html(returned_data) }
+    );
+}
+</script>
+<style type="text/css">
+.comment { border: 1px solid black; padding-left: 2px;
+    margin-bottom: 4px;}
+#blogpost {padding-top: 4px;
+    padding-bottom: 3px; }
+#blogpost h1 { margin: 4px 4px 4px 4px; }
+</style>
+{% endblock %}
+
+

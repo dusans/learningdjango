@@ -1,0 +1,25 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/lib/jquery-1.2.6.js"></script>
+    <link rel="stylesheet" href="{{ MEDIA_URL }}q3/css/q3demotube.css" />
+    <title>{% block title %}Quake 3 Demo Tube !!!{% endblock %}</title>
+</head>
+
+<body>
+    <div id="menu">
+        {% block menu %}
+            <p>
+                <a href="/q3demotube/videos/">Videos</a>
+                <a href="/q3demotube/demo_list/">Demo List</a>
+                <a href="/q3demotube/">Add Demo</a>
+            </p>
+        {% endblock %}
+    </div>
+
+    <div id="content">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

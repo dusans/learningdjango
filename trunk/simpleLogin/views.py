@@ -15,7 +15,6 @@ class TestForm(forms.Form):
     name = forms.CharField()
 
 def login_form(req):
-
     return render_to_response('simpleLogin/form.html', {'form': LoginForm()})
 
 def login_user(request):

@@ -1,18 +1,11 @@
-<p>
-    <a href="/q3demotube/videos/">Videos</a>
-    <a href="/q3demotube/demo_list/">Demo List</a>
-    <a href="/q3demotube/">Add Demo</a>
-</p>
+{% extends "q3demotube/baseq3.html" %}
 
+{% block content %}
 {% for video in videos  %}
 <p>
-    Demo: {{ video.demo.name }} -- {{ video.demo.demo.name }}<br/>
+    <b><a href="/q3demotube/video/{{ video.id }}/">Demo: {{ video.demo.name }}</a></b> <br/>
     Name: {{ video.name }}<br/>
-    Time: {{ video.time }} Start: {{ video.start }} End: {{ video.end }}<br/>
-    <embed id="{{ video.id }}" height="240" width="512" flashvars="fullscreen=true&file={{ MEDIA_URL }}q3/videos/{{ video.id }}.mp4&stretching=uniform&quality=true&width=320&height=240" allowfullscreen="true" allowscriptaccess="always" quality="high" name="{{ video.id }}" style="" src="{{ MEDIA_URL }}flash/player.swf" type="application/x-shockwave-flash"/>
+    <a href="/q3demotube/video/{{ video.id }}/"><img width="220" height="110" src="{{ video.thumbnail.url }}"></a>
 </p>
-
 {% endfor %}
-
-
-
+{% endblock %}
