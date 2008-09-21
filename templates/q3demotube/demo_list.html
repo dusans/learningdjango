@@ -1,14 +1,12 @@
-<p>
-    <a href="/q3demotube/videos/">Videos</a>
-    <a href="/q3demotube/demo_list/">Demo List</a>
-    <a href="/q3demotube/">Add Demo</a>
-</p>
+{% extends "q3demotube/baseq3.html" %}
 
+{% block content %}
 <table border="1">
 <tr>
     <th><b>Name</b></th>
     <th><b>Demo</b></th>
     <th><b>Category</b></th>
+    <th><b>Date</b></th>
     <th><b>User</b></th>
     <th><b>#Frags</b></th>
     <th><b>#Edit Frags</b></th>
@@ -16,11 +14,14 @@
 {% for d in demos  %}
 <tr>
     <td> {{ d.name }}</td>
-    <td> {{ d.demo.name }}</td>
+    <td> {{ d.demo.name|slice:":30" }}</td>
     <td> {{ d.category.name }}</td>
+    <td> {{ d.time_addet.date }}</td>
     <td> {{ d.user.username }}</td>
     <td> {{ d.video_set.count }}</td>
     <td> <a href="/q3demotube/times/{{ d.id }}/">#</a></td>
 </tr>
 {% endfor %}
 </table>
+{% endblock %}
+

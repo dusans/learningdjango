@@ -3,6 +3,8 @@ import os
 from q3demotube.models import Demo, Video
 from datetime import time, timedelta
 from django.conf import settings
+from django.core.files import File
+
 
 def getSec(t):
     return timedelta(hours=t.hour, minutes=t.minute, seconds=t.second).seconds
@@ -13,7 +15,7 @@ def addSec(t, n):
 
 q3mmeDir = "c:/Igre/q3/mme"
 q3Dir = "c:/Igre/q3"
-virtualDubDir = "c:/Program Files/VirtualDub"
+#virtualDubDir = "c:/Program Files/VirtualDub"
 ffmpegDir = "C:/Program Files/megui/tools/ffmpeg"
 mp4BoxDir = "C:/Program Files/megui/tools/mp4box"
 
@@ -39,8 +41,8 @@ def setMME(demo_id, quality, wav, fps, capType="images"):
 
     for video in videos:
         if capType == "images":
-            start = getSec(addSec(video.time, -20)) * 1000
-            end = getSec(addSec(video.time, 25)) * 1000
+            start = getSec(addSec(video.time, -15)) * 1000
+            end = getSec(addSec(video.time, 20)) * 1000
         else:
             start = getSec(video.start) * 1000
             end = getSec(video.end) * 1000
@@ -71,13 +73,13 @@ def getMMEImages(demo_id, capType="images"):
     #==== ==== ==== ====
     # SET MME
     #==== ==== ==== ====
-    setMME(demo_id, quality=35, wav=0, fps=4, capType=capType)
+    setMME(demo_id, quality=40, wav=0, fps=4, capType=capType)
 
     #==== ==== ==== ====
     # RUN CAPTURE
     #==== ==== ==== ====
     os.chdir("%s" % (q3Dir))
-    run = '''quake3mme.exe +set fs_game "mme" +set r_ignorehwgamma "2" +set mme_renderWidth "512" +set mme_renderHeight "240" +set r_multisample "0" +set r_multisampleNvidia "0" +set r_anisotropy "0" +set fs_extraGames "osp" +exec "low.cfg" +set r_picmip "16" +demolist "%s-demolist.txt"''' % (demo_id)
+    run = '''quake3mme.exe +set fs_game "mme" +set r_ignorehwgamma "2" +set mme_renderWidth "440" +set mme_renderHeight "220" +set r_multisample "0" +set r_multisampleNvidia "0" +set r_anisotropy "0" +exec "low.cfg" +set r_picmip "16" +demolist "%s-demolist.txt"''' % (demo_id)
     print run
     os.system('%s &' % run)
 
@@ -86,10 +88,18 @@ def getMMEImages(demo_id, capType="images"):
     #==== ==== ==== ====
     capture = os.listdir('%s/mme/capture/%s-%s' % (q3Dir, demo_id, capType))
 
+    os.chdir("%sq3/images" % (settings.MEDIA_ROOT))
+
+    try:
+        os.mkdir("%s-%s" % (demo_id, capType))
+    except:
+        print "Dir already existes"
+
     for video in videos:
         for image in capture:
             if image.startswith('%s.' % video.id):
-                shutil.copy2("%s/capture/%s-%s/%s" % (q3mmeDir, demo_id, capType, image), "%sq3/images/%s" % (settings.MEDIA_ROOT, image))
+                shutil.copy2("%s/capture/%s-%s/%s" % (q3mmeDir, demo_id, capType, image), "%sq3/images/%s-images/%s" % (settings.MEDIA_ROOT, demo_id, image))
+                video.images_set.create(image=File(open("%sq3/images/%s-images/%s" % (settings.MEDIA_ROOT, demo_id, image))))
 
         for image in capture:
             if image.startswith('%s.' % video.id):
@@ -115,7 +125,7 @@ def getMMEVideos(demo_id, capType="videos"):
     # RUN CAPTURE
     #==== ==== ==== ====
     os.chdir("%s" % (q3Dir))
-    run = '''quake3mme.exe +set fs_game "mme" +set r_ignorehwgamma "2" +set mme_renderWidth "512" +set mme_renderHeight "240" +set r_multisample "0" +set r_multisampleNvidia "0" +set r_anisotropy "0" +set fs_extraGames "osp" +exec "low.cfg" +set r_picmip "16" +demolist "%s-demolist.txt"''' % (demo_id)
+    run = '''quake3mme.exe +set fs_game "mme" +set r_ignorehwgamma "2" +set mme_renderWidth "540" +set mme_renderHeight "260" +set r_multisample "0" +set r_multisampleNvidia "0" +set r_anisotropy "0" +set fs_extraGames "osp" +exec "low.cfg" +set r_picmip "16" +demolist "%s-demolist.txt"''' % (demo_id)
     print run
     os.system('%s &' % run)
 
@@ -131,7 +141,7 @@ def getMMEVideos(demo_id, capType="videos"):
         # RUN FFMPEG + MP4BOX
         #==== ==== ==== ====
         os.chdir("%s" % (ffmpegDir))
-        run = '''ffmpeg.exe -y -r 30 -i "%s" -i "%s" -r 30 -acodec libfaac -ab 128k -vcodec libx264 -b 600k -s 512x240  "%s"''' % (firstImage, wavFile, outFile)
+        run = '''ffmpeg.exe -y -r 30 -i "%s" -i "%s" -r 30 -acodec libfaac -ab 128k -vcodec libx264 -b 550k -s 540x260  "%s"''' % (firstImage, wavFile, outFile)
         print run
         os.system('%s &' % run)
 
@@ -140,7 +150,13 @@ def getMMEVideos(demo_id, capType="videos"):
         print run
         os.system('%s &' % run)
 
+        count = video.images_set.all().count()
+        image = video.images_set.all()[count / 2].image
+        video.thumbnail = "/".join(image.name.split("/")[-4:])
+
         video.has_video = True
+        video.videoFile = "/".join(outFile.split("/")[-3:])
+
         video.save()
 
     #==== ==== ==== ====

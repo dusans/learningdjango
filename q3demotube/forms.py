@@ -1,22 +1,29 @@
-from q3demotube.models import Demo, Video
+from q3demotube.models import Demo, Video, VideoRating
 from django import forms
 from django.forms import ModelForm
+from django import forms
 
 class DemoForm(ModelForm):
     class Meta:
         model = Demo
-        exclude = ('user',)
+        exclude = ('user', 'time_addet',)
 
     #def __init__(self, user_id=None,*args,**kwargs):
         #super(DemoForm, self).__init__(*args, **kwargs)
         #self.user_id = user_id
 
+class VideoForm(forms.Form):
+    time = forms.TimeField()
+    tags = forms.CharField(max_length=300)
 
-class VideoForm(ModelForm):
+    #class Meta:
+        #model = Video
+        #fields = ('time',)
+
+class VideoRatingForm(ModelForm):
     class Meta:
-        model = Video
-        fields = ('time',)
-
+        model = VideoRating
+        fields = ('video', 'rate',)
 
 class VideoTimeForm(ModelForm):
     class Meta:

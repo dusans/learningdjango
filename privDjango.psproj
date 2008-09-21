@@ -23,31 +23,31 @@ Count=7
 
 [Project\ChildNodes\Node0\ChildNodes\Node0\ChildNodes\Node0]
 ClassName=TProjectFileNode
-FileName=C:\projekti\prviDjango\lottery\__init__.py
+FileName=D:\projekti\prviDjango\lottery\__init__.py
 
 [Project\ChildNodes\Node0\ChildNodes\Node0\ChildNodes\Node1]
 ClassName=TProjectFileNode
-FileName=C:\projekti\prviDjango\lottery\forms.py
+FileName=D:\projekti\prviDjango\lottery\forms.py
 
 [Project\ChildNodes\Node0\ChildNodes\Node0\ChildNodes\Node2]
 ClassName=TProjectFileNode
-FileName=C:\projekti\prviDjango\lottery\mesta.py
+FileName=D:\projekti\prviDjango\lottery\mesta.py
 
 [Project\ChildNodes\Node0\ChildNodes\Node0\ChildNodes\Node3]
 ClassName=TProjectFileNode
-FileName=C:\projekti\prviDjango\lottery\models.py
+FileName=D:\projekti\prviDjango\lottery\models.py
 
 [Project\ChildNodes\Node0\ChildNodes\Node0\ChildNodes\Node4]
 ClassName=TProjectFileNode
-FileName=C:\projekti\prviDjango\lottery\test.py
+FileName=D:\projekti\prviDjango\lottery\test.py
 
 [Project\ChildNodes\Node0\ChildNodes\Node0\ChildNodes\Node5]
 ClassName=TProjectFileNode
-FileName=C:\projekti\prviDjango\lottery\urls.py
+FileName=D:\projekti\prviDjango\lottery\urls.py
 
 [Project\ChildNodes\Node0\ChildNodes\Node0\ChildNodes\Node6]
 ClassName=TProjectFileNode
-FileName=C:\projekti\prviDjango\lottery\views.py
+FileName=D:\projekti\prviDjango\lottery\views.py
 
 [Project\ChildNodes\Node0\ChildNodes\Node1]
 ClassName=TProjectFolderNode
@@ -65,7 +65,7 @@ Count=1
 
 [Project\ChildNodes\Node0\ChildNodes\Node1\ChildNodes\Node0\ChildNodes\Node0]
 ClassName=TProjectFileNode
-FileName=C:\projekti\prviDjango\ostalo\loterija-mod\admin.py
+FileName=D:\projekti\prviDjango\ostalo\loterija-mod\admin.py
 
 [Project\ChildNodes\Node0\ChildNodes\Node2]
 ClassName=TProjectFolderNode
@@ -76,19 +76,19 @@ Count=4
 
 [Project\ChildNodes\Node0\ChildNodes\Node2\ChildNodes\Node0]
 ClassName=TProjectFileNode
-FileName=C:\projekti\prviDjango\polls\__init__.py
+FileName=D:\projekti\prviDjango\polls\__init__.py
 
 [Project\ChildNodes\Node0\ChildNodes\Node2\ChildNodes\Node1]
 ClassName=TProjectFileNode
-FileName=C:\projekti\prviDjango\polls\models.py
+FileName=D:\projekti\prviDjango\polls\models.py
 
 [Project\ChildNodes\Node0\ChildNodes\Node2\ChildNodes\Node2]
 ClassName=TProjectFileNode
-FileName=C:\projekti\prviDjango\polls\urls.py
+FileName=D:\projekti\prviDjango\polls\urls.py
 
 [Project\ChildNodes\Node0\ChildNodes\Node2\ChildNodes\Node3]
 ClassName=TProjectFileNode
-FileName=C:\projekti\prviDjango\polls\views.py
+FileName=D:\projekti\prviDjango\polls\views.py
 
 [Project\ChildNodes\Node0\ChildNodes\Node3]
 ClassName=TProjectFolderNode
@@ -99,27 +99,27 @@ Count=6
 
 [Project\ChildNodes\Node0\ChildNodes\Node3\ChildNodes\Node0]
 ClassName=TProjectFileNode
-FileName=C:\projekti\prviDjango\q3demotube\__init__.py
+FileName=D:\projekti\prviDjango\q3demotube\__init__.py
 
 [Project\ChildNodes\Node0\ChildNodes\Node3\ChildNodes\Node1]
 ClassName=TProjectFileNode
-FileName=C:\projekti\prviDjango\q3demotube\forms.py
+FileName=D:\projekti\prviDjango\q3demotube\forms.py
 
 [Project\ChildNodes\Node0\ChildNodes\Node3\ChildNodes\Node2]
 ClassName=TProjectFileNode
-FileName=C:\projekti\prviDjango\q3demotube\models.py
+FileName=D:\projekti\prviDjango\q3demotube\models.py
 
 [Project\ChildNodes\Node0\ChildNodes\Node3\ChildNodes\Node3]
 ClassName=TProjectFileNode
-FileName=C:\projekti\prviDjango\q3demotube\q3demo.py
+FileName=D:\projekti\prviDjango\q3demotube\q3demo.py
 
 [Project\ChildNodes\Node0\ChildNodes\Node3\ChildNodes\Node4]
 ClassName=TProjectFileNode
-FileName=C:\projekti\prviDjango\q3demotube\urls.py
+FileName=D:\projekti\prviDjango\q3demotube\urls.py
 
 [Project\ChildNodes\Node0\ChildNodes\Node3\ChildNodes\Node5]
 ClassName=TProjectFileNode
-FileName=C:\projekti\prviDjango\q3demotube\views.py
+FileName=D:\projekti\prviDjango\q3demotube\views.py
 
 [Project\ChildNodes\Node0\ChildNodes\Node4]
 ClassName=TProjectFolderNode
@@ -137,31 +137,31 @@ Count=1
 
 [Project\ChildNodes\Node0\ChildNodes\Node4\ChildNodes\Node0\ChildNodes\Node0]
 ClassName=TProjectFileNode
-FileName=C:\projekti\prviDjango\registration\bin\delete_expired_users.py
+FileName=D:\projekti\prviDjango\registration\bin\delete_expired_users.py
 
 [Project\ChildNodes\Node0\ChildNodes\Node4\ChildNodes\Node1]
 ClassName=TProjectFileNode
-FileName=C:\projekti\prviDjango\registration\__init__.py
+FileName=D:\projekti\prviDjango\registration\__init__.py
 
 [Project\ChildNodes\Node0\ChildNodes\Node4\ChildNodes\Node2]
 ClassName=TProjectFileNode
-FileName=C:\projekti\prviDjango\registration\admin.py
+FileName=D:\projekti\prviDjango\registration\admin.py
 
 [Project\ChildNodes\Node0\ChildNodes\Node4\ChildNodes\Node3]
 ClassName=TProjectFileNode
-FileName=C:\projekti\prviDjango\registration\forms.py
+FileName=D:\projekti\prviDjango\registration\forms.py
 
 [Project\ChildNodes\Node0\ChildNodes\Node4\ChildNodes\Node4]
 ClassName=TProjectFileNode
-FileName=C:\projekti\prviDjango\registration\models.py
+FileName=D:\projekti\prviDjango\registration\models.py
 
 [Project\ChildNodes\Node0\ChildNodes\Node4\ChildNodes\Node5]
 ClassName=TProjectFileNode
-FileName=C:\projekti\prviDjango\registration\urls.py
+FileName=D:\projekti\prviDjango\registration\urls.py
 
 [Project\ChildNodes\Node0\ChildNodes\Node4\ChildNodes\Node6]
 ClassName=TProjectFileNode
-FileName=C:\projekti\prviDjango\registration\views.py
+FileName=D:\projekti\prviDjango\registration\views.py
 
 [Project\ChildNodes\Node0\ChildNodes\Node5]
 ClassName=TProjectFolderNode
@@ -172,39 +172,39 @@ Count=4
 
 [Project\ChildNodes\Node0\ChildNodes\Node5\ChildNodes\Node0]
 ClassName=TProjectFileNode
-FileName=C:\projekti\prviDjango\simpleLogin\__init__.py
+FileName=D:\projekti\prviDjango\simpleLogin\__init__.py
 
 [Project\ChildNodes\Node0\ChildNodes\Node5\ChildNodes\Node1]
 ClassName=TProjectFileNode
-FileName=C:\projekti\prviDjango\simpleLogin\models.py
+FileName=D:\projekti\prviDjango\simpleLogin\models.py
 
 [Project\ChildNodes\Node0\ChildNodes\Node5\ChildNodes\Node2]
 ClassName=TProjectFileNode
-FileName=C:\projekti\prviDjango\simpleLogin\urls.py
+FileName=D:\projekti\prviDjango\simpleLogin\urls.py
 
 [Project\ChildNodes\Node0\ChildNodes\Node5\ChildNodes\Node3]
 ClassName=TProjectFileNode
-FileName=C:\projekti\prviDjango\simpleLogin\views.py
+FileName=D:\projekti\prviDjango\simpleLogin\views.py
 
 [Project\ChildNodes\Node0\ChildNodes\Node6]
 ClassName=TProjectFileNode
-FileName=C:\projekti\prviDjango\__init__.py
+FileName=D:\projekti\prviDjango\__init__.py
 
 [Project\ChildNodes\Node0\ChildNodes\Node7]
 ClassName=TProjectFileNode
-FileName=C:\projekti\prviDjango\manage.py
+FileName=D:\projekti\prviDjango\manage.py
 
 [Project\ChildNodes\Node0\ChildNodes\Node8]
 ClassName=TProjectFileNode
-FileName=C:\projekti\prviDjango\setShell.py
+FileName=D:\projekti\prviDjango\setShell.py
 
 [Project\ChildNodes\Node0\ChildNodes\Node9]
 ClassName=TProjectFileNode
-FileName=C:\projekti\prviDjango\settings.py
+FileName=D:\projekti\prviDjango\settings.py
 
 [Project\ChildNodes\Node0\ChildNodes\Node10]
 ClassName=TProjectFileNode
-FileName=C:\projekti\prviDjango\urls.py
+FileName=D:\projekti\prviDjango\urls.py
 
 [Project\ChildNodes\Node1]
 ClassName=TProjectRunConfiguationsNode
@@ -217,7 +217,7 @@ ClassName=TProjectRunConfiguationNode
 Name=Untitled
 
 [Project\ChildNodes\Node1\ChildNodes\Node0\RunConfig]
-ScriptName=C:\projekti\prviDjango\setShell.py
+ScriptName=D:\projekti\prviDjango\setShell.py
 EngineType=peRemote
 ReinitializeBeforeRun=FALSE
 WorkingDir=$[ActiveScript-Dir]

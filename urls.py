@@ -20,5 +20,6 @@ urlpatterns = patterns('',
     (r'^login/', include('simpleLogin.urls')),
     (r'^loginUser/', include('simpleLogin.urls')),
     (r'^q3demotube/', include('q3demotube.urls')),
+    (r'^threadedcomments/', include('threadedcomments.urls')),
     #(r'^photologue/', include('photologue.urls')),
 )
