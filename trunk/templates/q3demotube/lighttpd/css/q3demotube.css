@@ -1,0 +1,22 @@
+BODY {
+ background-color:lightGrey;
+}
+
+h2 {
+	margin: 11px;
+}
+
+h3 {
+	margin: 0px;
+}
+
+hr {
+	border-color:grey -moz-use-text-color -moz-use-text-color;
+	border-style:solid none none;
+	border-width:1px 0 0;
+	margin:0.3em 0;
+}
+
+p#menu {
+	margin: 5px;
+}
