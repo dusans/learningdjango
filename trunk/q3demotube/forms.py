@@ -8,17 +8,23 @@ class DemoForm(ModelForm):
         model = Demo
         exclude = ('user', 'time_addet',)
 
-    #def __init__(self, user_id=None,*args,**kwargs):
-        #super(DemoForm, self).__init__(*args, **kwargs)
-        #self.user_id = user_id
+class DemoEdit(ModelForm):
+    class Meta:
+        model = Demo
+        exclude = ('user', 'time_addet', 'demo')
 
-class VideoForm(forms.Form):
-    time = forms.TimeField(required=True)
+
+class VideoForm(ModelForm):
+    class Meta:
+        model = Video
+        fields = ('time', 'name',)
     tags = forms.CharField(max_length=300, min_length=2)
 
-    #class Meta:
-        #model = Video
-        #fields = ('time',)
+class VideoEdit(ModelForm):
+    class Meta:
+        model = Video
+        fields = ('time', 'name', 'description')
+    tags = forms.CharField(max_length=300, min_length=2)
 
 class VideoRatingForm(ModelForm):
     class Meta:

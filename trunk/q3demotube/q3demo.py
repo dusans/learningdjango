@@ -132,7 +132,11 @@ def getMMEVideos(demo_id, capType="videos"):
     capture = os.listdir('%s/mme/capture/%s-%s' % (q3Dir, demo_id, capType))
 
     for video in videos:
+        #==== ==== ==== ====
+        # GET MEDIA
+        #==== ==== ==== ====
         #firstImage = [i for i in capture if i.startswith("%s." %video.id) and i.endswith(".jpg")][0]
+        capturedImages = [i for i in capture if i.startswith("%s." %video.id) and i.endswith(".jpg")]
         firstImage = "%s/capture/%s-%s/%s.%s.jpg" % (q3mmeDir, demo.id, capType, video.id, "%010d")
         wavFile = "%s/capture/%s-%s/%s.wav" % (q3mmeDir, demo.id, capType, video.id)
         outFile = "%sq3/videos/%s.mp4" % (settings.MEDIA_ROOT, video.id)
@@ -141,7 +145,7 @@ def getMMEVideos(demo_id, capType="videos"):
         # RUN FFMPEG + MP4BOX
         #==== ==== ==== ====
         os.chdir("%s" % (ffmpegDir))
-        run = '''ffmpeg.exe -y -r 30 -i "%s" -i "%s" -r 30 -acodec libfaac -ab 128k -vcodec libx264 -b 550k -s 540x260  "%s"''' % (firstImage, wavFile, outFile)
+        run = '''ffmpeg.exe -y -r 30 -i "%s" -i "%s" -r 30 -acodec libfaac -ab 128k -vcodec libx264 -s 540x260 -b 500k "%s"''' % (firstImage, wavFile, outFile)
         print run
         os.system('%s &' % run)
 
@@ -150,12 +154,18 @@ def getMMEVideos(demo_id, capType="videos"):
         print run
         os.system('%s &' % run)
 
-        count = video.images_set.all().count()
-        image = video.images_set.all()[count / 2].image
-        video.thumbnail = "/".join(image.name.split("/")[-4:])
+        #==== ==== ==== ====
+        # THUMBNAIL
+        #==== ==== ==== ====
+        image = capturedImages[len(capturedImages) / 2]
+        shutil.copy2("%s/capture/%s-%s/%s" % (q3mmeDir, demo_id, capType, image), "%sq3/thumbnails/%s.jpg" % (settings.MEDIA_ROOT, video.id))
+        video.thumbnail = "q3/thumbnails/%s.jpg" % (video.id)
 
+        #==== ==== ==== ====
+        # SAVE
+        #==== ==== ==== ====
+        video.videoFile = "q3/videos/%s.mp4" % (video.id)
         video.has_video = True
-        video.videoFile = "/".join(outFile.split("/")[-3:])
 
         video.save()
 

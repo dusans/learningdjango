@@ -4,9 +4,12 @@ from django.shortcuts import render_to_response
 from django.http import HttpResponse
 from django.forms.formsets import formset_factory
 from django.contrib.auth.decorators import login_required
-#from datetime import time, timedelta
+from django.core.paginator import Paginator
+from django.template import RequestContext
+from django.views.generic.simple import direct_to_template
 from django.conf import settings
 from q3demotube.q3demo import addSec, getSec, getMMEImages, getMMEVideos
+from django.views.generic.create_update import delete_object
 
 @login_required
 def add_demo(request):
@@ -19,62 +22,88 @@ def add_demo(request):
             d = demoForm.save(commit=False)
             d.user_id = request.user.id
             d.save()
-
+            #>>> for t in v.tag_set.all():
+            #...     t.delete()
             for f in videoForm.forms:
                 if f.is_valid():
                     if 'time' in f.cleaned_data and 'tags' in f.cleaned_data:
-                        timeIn = f.cleaned_data['time']
-                        video = d.video_set.create(time=timeIn, start=addSec(timeIn, -10), end=addSec(timeIn, 8))
+                        name, timeIn = f.cleaned_data['name'], f.cleaned_data['time']
+                        video = d.video_set.create(name=name, time=timeIn, start=addSec(timeIn, -10), end=addSec(timeIn, 8))
                         # Tags
-                        for tag in f.cleaned_data['tags'].split(","):
-                            video.tag_set.create(tag=tag)
-                        '''v = video.save(commit=False)
-                        v.demo_id = d.id
-                        v.start = addSec(v.time, -10)
-                        v.end = addSec(v.time, 8)
-                        v.save()'''
+                        video.set_tags(f.cleaned_data['tags'])
+                        #for tag in f.cleaned_data['tags'].split(","):
+                            #video.tag_set.create(tag=tag.strip())
         else:
-            return render_to_response('q3demotube/add_demo.html', { 'demoForm':demoForm, 'videoForm':videoForm,
-                                                                    'MEDIA_URL': settings.MEDIA_URL})
+            return direct_to_template(request, 'q3demotube/add_demo.html', { 'demoForm':demoForm, 'videoForm':videoForm})
 
     demoForm = DemoForm({'category': Category.objects.latest('id').id})
     videoForm = VideoFormSet()
-    return render_to_response('q3demotube/add_demo.html', { 'demoForm':demoForm, 'videoForm':videoForm,
-                                                            'MEDIA_URL': settings.MEDIA_URL})
+    return direct_to_template(request, 'q3demotube/add_demo.html', { 'demoForm':demoForm, 'videoForm':videoForm})
 
-#@login_required
+@login_required
 def demo_list(request):
-    demos = Demo.objects.all()
-    return render_to_response('q3demotube/demo_list.html', {'demos': demos, 'MEDIA_URL': settings.MEDIA_URL})
-
-def videos(request):
-    videos = Video.objects.filter(has_video=True)
-    return render_to_response('q3demotube/videos.html', {'videos': videos, 'MEDIA_URL': settings.MEDIA_URL})
-
-def times(request, demo_id):
-    timeList = Video.objects.filter(demo=demo_id)
-    demo = Demo.objects.get(pk=demo_id)
-    return render_to_response('q3demotube/times.html', {'timeList': timeList, 'demo': demo})
+    demos = Demo.objects.filter(user=request.user).order_by('-time_addet')
+    return direct_to_template(request, 'q3demotube/demo_list.html', {'demos': demos})
 
 @login_required
-def get_images(request, demo_id):
-    demo = Demo.objects.get(pk=demo_id)
-    if demo.video_set.filter(has_images=False).count():
-        getMMEImages(demo_id)
-    return times(request, demo_id)
+def demo_view(request, demo_id):
+    demo = Demo.objects.get(pk=demo_id, user=request.user)
+    if request.method == 'POST':
+        demoEdit = DemoEdit(request.POST, instance=demo)
+        if demoEdit.is_valid():
+            demoEdit.save()
+        return demo_list(request)
+    else:
+        videos = demo.video_set.all()
+        demoEdit = DemoEdit(instance=demo)
+        return direct_to_template(request, 'q3demotube/demo.html', {'videos': videos,
+                                                            'demo': demo, 'demoEdit': demoEdit})
 
 @login_required
-def get_videos(request, demo_id):
-    demo = Demo.objects.get(pk=demo_id)
-    if demo.video_set.filter(has_video=False).count():
-        getMMEVideos(demo_id)
-    return times(request, demo_id)
+def delete_demo(request, object_id):
+    if Demo.objects.get(pk=object_id, user=request.user):
+        return delete_object(request, object_id=object_id, model=Demo, post_delete_redirect='/q3demotube/demo_list/')
+
+@login_required
+def delete_video(request, object_id):
+    video = Video.objects.get(pk=object_id, demo__user=request.user)
+    if video:
+        return delete_object(request, object_id=object_id, model=Video, post_delete_redirect='/q3demotube/demo/%s/' % video.demo.id)
+
+def videos(request, page_number=1):
+    videos = Video.objects.filter(has_video=True).order_by('-time_addet')
+    p = Paginator(videos, 5)
+    return direct_to_template(request, 'q3demotube/videos.html', {'videos': p.page(page_number).object_list,
+                                                            'pages': p.num_pages,
+                                                            'page_number': int(page_number)})
+
+@login_required
+def my_videos(request, page_number=1):
+    videos = Video.objects.filter(has_video=True, demo__user=request.user).order_by('-time_addet')
+    p = Paginator(videos, 5)
+    return direct_to_template(request, 'q3demotube/my_videos.html', {'videos': p.page(page_number).object_list,
+                                                            'pages': p.num_pages,
+                                                            'page_number': int(page_number)})
 
 def video(request, video_id):
     video = Video.objects.get(pk=video_id)
     video.view_set.create(ip=request.META['REMOTE_ADDR'], user_id=request.user.id)
-    return render_to_response('q3demotube/video.html', {'video': video, 'MEDIA_URL': settings.MEDIA_URL,
+    return direct_to_template(request, 'q3demotube/video.html', {'video': video,
                                 'ratings': range(1,6), 'rated': video.rated()})
+
+@login_required
+def video_edit(request, video_id):
+    video = Video.objects.get(pk=video_id, demo__user=request.user.id)
+    if request.method == 'POST':
+        videoEdit = VideoEdit(request.POST, instance=video, initial={'tags': video.tags()})
+        if videoEdit.is_valid():
+            v = videoEdit.save()
+            v.set_tags(videoEdit.cleaned_data['tags'])
+
+        return direct_to_template(request, 'q3demotube/video_edit.html', {'videoEdit': videoEdit, 'video': video})
+    else:
+        videoEdit = VideoEdit(instance=video, initial={'tags': video.tags()})
+        return direct_to_template(request, 'q3demotube/video_edit.html', {'videoEdit': videoEdit, 'video': video})
 
 @login_required
 def rate_video(request):
@@ -104,12 +133,26 @@ def edit_time(request, video_id=0):
         timeForm = VideoTimeForm(request.POST, instance=video)
         if timeForm.is_valid():
             timeForm.save()
-        return times(request, video.demo_id)
+        return demo_view(request, video.demo_id)
     else:
         timeForm = VideoTimeForm({'start': video.start, 'end': video.end})
 
     images = [(str(addSec(start, i / 4)), "0" * (10 - len(str(i))) + str(i)) for i in range(140)]
 
-    return render_to_response('q3demotube/edit_time.html', {'images': images, 'MEDIA_URL': settings.MEDIA_URL,
+    return direct_to_template(request, 'q3demotube/edit_time.html', {'images': images,
                                                             'demo_id': video.demo.id, 'timeForm': timeForm,
                                                             'videoTime': str(video.time), 'video': video})
+
+@login_required
+def get_images(request, demo_id):
+    demo = Demo.objects.get(pk=demo_id)
+    if demo.video_set.filter(has_images=False).count():
+        getMMEImages(demo_id)
+    return demo_view(request, demo_id)
+
+@login_required
+def get_videos(request, demo_id):
+    demo = Demo.objects.get(pk=demo_id)
+    if demo.video_set.filter(has_video=False).count():
+        getMMEVideos(demo_id)
+    return demo_view(request, demo_id)
