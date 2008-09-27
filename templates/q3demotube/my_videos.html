@@ -1,0 +1,20 @@
+{% extends "q3demotube/baseq3.html" %}
+
+{% block page_title %}My Videos {% endblock %}
+{% block content %}
+<p align="center">
+        <a href='/q3demotube/my_videos/1/' >First</a>
+        <a href='/q3demotube/my_videos/{{ page_number|add:"-1" }}/' >Previus</a>
+        <label>{{ page_number }}</label> / {{ pages }}
+        <a href='/q3demotube/my_videos/{{ page_number|add:"1" }}/' >Next</a>
+        <a href='/q3demotube/my_videos/{{ pages }}/' >Last</a>
+</p>
+{% for video in videos  %}
+<p>
+    <b><a href="/q3demotube/video/{{ video.id }}/">Name: {{ video.name }}</a></b>
+    <b><a href="/q3demotube/video_edit/{{ video.id }}/">Edit</a></b> <br/>
+    Demo: {{ video.demo.name }}<br/>
+    <a href="/q3demotube/video/{{ video.id }}/"><img width="220" height="110" src="{{ video.thumbnail.url }}"></a>
+</p>
+{% endfor %}
+{% endblock %}

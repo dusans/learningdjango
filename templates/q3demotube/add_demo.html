@@ -1,22 +1,40 @@
 {% extends "q3demotube/baseq3.html" %}
 
+{% block page_title %}Add Demo{% endblock %}
 {% block content %}
 <script language="javascript" type="text/javascript">
 String.prototype.sprintf = function() { var i = 0, args = arguments[0]; return this.replace(/%s/g, function() { return args[i++] }); };
 
 function setNameAndTimes() {
+    //DEMO NAME
     demo = $('#id_demo').val()
-    name = demo.split("_")
-    if(name.length > 4) {
-        $('#id_name').val(demo.split("_").slice(0,4).join(" "))
+    name = demo.replace(/^\d+\-/, "")
+    name = name.split("__")[0]
+    name = name.split("_")
+    if(name.length > 0) {
+        $('#id_name').val(name.join("_"))
     }
+
+    videoName = name.join(" ")
+
+    //TAGS
+    tags = []
+    for(i in name) {
+        t = name[i].replace(/[^\d\w_\-]/, "")
+        if(t.length > 2) {
+            tags.push(t)
+        }
+    }
+    tags = tags.join(", ")
+    //TIMES
     times = demo.split("__")
     if(times.length > 1) {
-
         times = times[1].split("_")
 
         for(t in times) {
             $('#id_form-'+t+'-time').val("00:%s:%s".sprintf(times[t].split(".")))
+            $('#id_form-'+t+'-name').val(videoName)
+            $('#id_form-'+t+'-tags').val(tags)
         }
     }
 }
@@ -28,13 +46,14 @@ $(document).ready(function(){
 
 </script>
 
-<form action="/q3demotube/add_demo" method="POST" enctype="multipart/form-data">
+<form action="/q3demotube/add_demo/" method="POST" enctype="multipart/form-data">
     {{ demoForm.as_p }}
     <div>
         {{ videoForm.management_form }}
+        Frags (time and tags requeired):<br/>
         Format: <b>00:00:00 hours:minutes:seconds</b><br/>
         {% for form in videoForm.forms  %}
-            Time :{{ form.time }} Tags: {{ form.tags }} <br/>
+            Name: {{ form.name }} Time :{{ form.time }} Tags: {{ form.tags }} <br/>
         {% endfor %}
     </div>
 <input type="Submit" value="Submit">
