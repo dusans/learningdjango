@@ -13,8 +13,8 @@ class DemoForm(ModelForm):
         #self.user_id = user_id
 
 class VideoForm(forms.Form):
-    time = forms.TimeField()
-    tags = forms.CharField(max_length=300)
+    time = forms.TimeField(required=True)
+    tags = forms.CharField(max_length=300, min_length=2)
 
     #class Meta:
         #model = Video
