@@ -1,0 +1,17 @@
+{% extends "q3demotube/baseq3.html" %}
+
+{% block content %}
+<form action="/q3demotube/delete_video/{{ object.id }}/" method="POST">
+ <b>Are u sure u want to delete the Video?</b><br/>
+ <table>
+    <tr> <td>Name:</td> <td>{{ object.name }}</td> </tr>
+    <tr> <td>Demo:</td> <td>{{ object.demo.name }}</td> </tr>
+    <tr> <td>Category:</td> <td>{{ object.demo.category.name }}</td> </tr>
+    <tr> <td>Description:</td> <td>{{ object.description }}</td> </tr>
+    <tr> <td>Time:</td> <td>{{ object.time }}</td> </tr>
+    <tr> <td>Time_addet:</td> <td>{{ object.time_addet }}</td> </tr>
+ </table>
+
+<input type="Submit" value="OK">
+</form>
+{% endblock %}

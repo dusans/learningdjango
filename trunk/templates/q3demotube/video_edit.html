@@ -1,0 +1,11 @@
+{% extends "q3demotube/baseq3.html" %}
+
+{% block page_title %}Video edit{% endblock %}
+{% block content %}
+<p>
+<form action="/q3demotube/video_edit/{{ video.id }}/" method="POST">
+{{ videoEdit.as_p }}
+<input type="Submit" value="Submit"><br/>
+</form>
+
+{% endblock %}

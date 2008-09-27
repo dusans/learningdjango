@@ -8,12 +8,25 @@
 </head>
 
 <body>
+    <h2>Quake 3 Demo Tube</h2>
+    <div id="title">
+        <h3>{% block page_title %}Home{% endblock %}</h3>
+    </div>
     <div id="menu">
         {% block menu %}
             <p>
                 <a href="/q3demotube/videos/">Videos</a>
-                <a href="/q3demotube/demo_list/">Demo List</a>
-                <a href="/q3demotube/">Add Demo</a>
+                {% if user.is_authenticated %}
+                    <a href="/q3demotube/my_videos/">My videos</a>
+                    <a href="/q3demotube/demo_list/">My demos</a>
+                    <a href="/q3demotube/add_demo/">Add Demo</a>
+                    <a href="/registration/logout/">LogOut</a>
+                    Hi {{ user.username }}
+                {% else %}
+                    <a href="/registration/login/">LogIn</a>
+                    <a href="/registration/register/">Register</a>
+                {% endif %}
+
             </p>
         {% endblock %}
     </div>

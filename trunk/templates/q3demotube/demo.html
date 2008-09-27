@@ -1,0 +1,49 @@
+{% extends "q3demotube/baseq3.html" %}
+
+{% block page_title %}Demo View{% endblock %}
+{% block content %}
+<p>
+<form action="/q3demotube/edit_demo/{{ demo.id }}/" method="POST" enctype="multipart/form-data">
+{{ demoEdit.as_p }}
+<input type="Submit" value="Submit"><br/>
+</form>
+
+</p>
+<b>Frag List:</b><br/>
+<table border="1">
+<tr>
+    <th><b>Name</b></th>
+    <th><b>Time</b></th>
+    <th><b>Start</b></th>
+    <th><b>End</b></th>
+    <th><b>Description</b></th>
+    <th><b>Tags</b></th>
+    <th><b>Has_images</b></th>
+    <th><b>Has_video</b></th>
+    <th><b>Can be captured</b></th>
+    <th><b>#Edit</b></th>
+    <th><b>#Edit times</b></th>
+    <th><b>Delete</b></th>
+</tr>
+{% for v in videos  %}
+<tr>
+    <td> {{ v.name }}</td>
+    <td> {{ v.time }}</td>
+    <td> {{ v.start }}</td>
+    <td> {{ v.end }}</td>
+    <td> {{ v.description }}</td>
+    <td> {{ v.tags }}</td>
+    <td> {{ v.has_images }}</td>
+    <td> {{ v.has_video }}</td>
+    <td> {{ v.can_be_captured }}</td>
+    <td> <a href="/q3demotube/video_edit/{{ v.id }}/">[$]</a></td>
+    <td> <a href="/q3demotube/edit_time/{{ v.id }}/">[$]</a></td>
+    <td> <a href="/q3demotube/delete_video/{{ v.id }}/">[X]</a></td>
+</tr>
+{% endfor %}
+</table>
+<p>
+    <a href="/q3demotube/get_images/{{ demo.id }}/">Get Images</a>
+    <a href="/q3demotube/get_videos/{{ demo.id }}/">Get Videos</a>
+</p>
+{% endblock %}

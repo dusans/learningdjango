@@ -1,5 +1,6 @@
 {% extends "q3demotube/baseq3.html" %}
 
+{% block page_title %}Edit start and end Time{% endblock %}
 {% block content %}
 <form action="/q3demotube/edit_time/{{ video.id }}/" method="POST">
  Start: {{ timeForm.start }} End {{ timeForm.end }}
@@ -7,23 +8,24 @@
 </form>
 
 <p>
- <b>Click progress bar to set Start, Double click to set End!</b> <br/>
+ <b>Double click progress bar to set Start, click to set End!</b> <br/>
  <b>Max video length = 30 sec</b>
 </p>
 
-<img align="center" height="440" width="880" id="theImage" src="{{ MEDIA_URL }}q3/images/{{ demo_id }}.{{ images|first|last }}.jpg"/>
-<div id="navcontainer">
-<ul id="navlist">
-{% for time, i in images %}
-    <li onmouseover="$('img#theImage').attr('src', '{{ MEDIA_URL }}q3/images/{{ demo_id }}-images/{{ video.id }}.{{ i }}.jpg')" id="{{ i }}" ondblclick="$('input#id_end').val('{{ time }}')" onclick="$('input#id_start, #time').val('{{ time }}')">
-    {% ifequal videoTime time %}
-        <b>|</b>
-    {% endifequal  %}
-    </li>
-{% endfor %}
-</ul>
-</div>
-
+{% if video.has_images %}
+    <img align="center" height="440" width="880" id="theImage" src="{{ MEDIA_URL }}q3/images/{{ demo_id }}.{{ images|first|last }}.jpg"/>
+    <div id="navcontainer">
+    <ul id="navlist">
+    {% for time, i in images %}
+        <li onmouseover="$('img#theImage').attr('src', '{{ MEDIA_URL }}q3/images/{{ demo_id }}-images/{{ video.id }}.{{ i }}.jpg')" id="{{ i }}" onclick="$('input#id_end').val('{{ time }}')" ondblclick="$('input#id_start, #time').val('{{ time }}')">
+        {% ifequal videoTime time %}
+            <b>|</b>
+        {% endifequal  %}
+        </li>
+    {% endfor %}
+    </ul>
+    </div>
+{% endif %}
 <style type="text/css">
     #navlist li
     {

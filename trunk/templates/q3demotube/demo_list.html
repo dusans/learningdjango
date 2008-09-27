@@ -1,5 +1,6 @@
 {% extends "q3demotube/baseq3.html" %}
 
+{% block page_title %}My Demos{% endblock %}
 {% block content %}
 <table border="1">
 <tr>
@@ -9,7 +10,8 @@
     <th><b>Date</b></th>
     <th><b>User</b></th>
     <th><b>#Frags</b></th>
-    <th><b>#Edit Frags</b></th>
+    <th><b>#Edit</b></th>
+    <th><b>#Delete</b></th>
 </tr>
 {% for d in demos  %}
 <tr>
@@ -19,7 +21,8 @@
     <td> {{ d.time_addet.date }}</td>
     <td> {{ d.user.username }}</td>
     <td> {{ d.video_set.count }}</td>
-    <td> <a href="/q3demotube/times/{{ d.id }}/">#</a></td>
+    <td> <a href="/q3demotube/demo/{{ d.id }}/">[$]</a></td>
+    <td> <a href="/q3demotube/delete_demo/{{ d.id }}/">[X]</a></td>
 </tr>
 {% endfor %}
 </table>

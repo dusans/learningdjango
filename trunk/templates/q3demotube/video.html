@@ -12,18 +12,20 @@ $(document).ready(function() {
 });
 </script>
 
-
+<label id="message"></label>
 <p>
-    <b>Demo: {{ video.demo.name }} -- {{ video.demo.demo.name|slice:":30" }}</b><br/>
-    Name: {{ video.name }}<br/>
+    <b>Name: {{ video.name }}</b><br/>
+    <embed id="{{ video.id }}" width="540" height="260" flashvars="fullscreen=true&file={{ MEDIA_URL }}q3/videos/{{ video.id }}.mp4&stretching=uniform&quality=true&width=540&height=260" allowfullscreen="true" allowscriptaccess="always" quality="high" name="{{ video.id }}" style="" src="{{ MEDIA_URL }}flash/player.swf" type="application/x-shockwave-flash"/><br/><br/>
+    Demo: {{ video.demo.name }}<br/>
+    Tags: {{ video.tags }}<br/>
     Time: {{ video.time }} Start: {{ video.start }} End: {{ video.end }}<br/>
-    Views: {{ video.view_set.count }}<br/><br/>
-    <embed id="{{ video.id }}" width="540" height="260" flashvars="fullscreen=true&file={{ MEDIA_URL }}q3/videos/{{ video.id }}.mp4&stretching=uniform&quality=true&width=540&height=260" allowfullscreen="true" allowscriptaccess="always" quality="high" name="{{ video.id }}" style="" src="{{ MEDIA_URL }}flash/player.swf" type="application/x-shockwave-flash"/>
+    Views: {{ video.view_set.count }}<br/>
+    Description: {{ video.description }}<br/>
+
 </p>
 
-<div id="starRating" class="rating">&nbsp;</div> <label id="message"></label><br/>
+<div id="starRating" class="rating">&nbsp;</div>
 <a href="#" onclick="add_favorite()">Favorite!</a>
-
 
 <h3>Comments on This Post:</h3>
 {% get_free_threaded_comment_tree for video as tree %}
