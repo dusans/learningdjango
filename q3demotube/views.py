@@ -1,19 +1,18 @@
-from q3demotube.forms import DemoForm, VideoForm, VideoTimeForm, VideoRatingForm
+from q3demotube.models import Demo, Video, Category
+from q3demotube.forms import *
 from django.shortcuts import render_to_response
 from django.http import HttpResponse
 from django.forms.formsets import formset_factory
 from django.contrib.auth.decorators import login_required
-from q3demotube.models import Demo, Video, Category
-from datetime import time, timedelta
+#from datetime import time, timedelta
 from django.conf import settings
 from q3demotube.q3demo import addSec, getSec, getMMEImages, getMMEVideos
-# Create your views here.
 
 @login_required
 def add_demo(request):
     VideoFormSet = formset_factory(VideoForm, extra=3)
-    if request.POST:
-        demoForm = DemoForm(request.POST, request.FILES)
+    if request.method == "POST":
+        demoForm = DemoForm(request.POST, request.FILES) #, initial={'user_id': request.user.id}
         videoForm = VideoFormSet(request.POST)
 
         if demoForm.is_valid():
@@ -21,20 +20,19 @@ def add_demo(request):
             d.user_id = request.user.id
             d.save()
 
-            for form in videoForm.forms:
-                if form.is_valid():
-                    print form
-                    timeIn2 = form.cleaned_data['time']
-                    print timeIn2
-                    video = d.video_set.create(time=timeIn2, start=addSec(timeIn2, -10), end=addSec(timeIn2, 8))
-                    # Tags
-                    for tag in form.cleaned_data['tags'].split(" "):
-                        video.tag_set.create(tag=tag)
-                    '''v = video.save(commit=False)
-                    v.demo_id = d.id
-                    v.start = addSec(v.time, -10)
-                    v.end = addSec(v.time, 8)
-                    v.save()'''
+            for f in videoForm.forms:
+                if f.is_valid():
+                    if 'time' in f.cleaned_data and 'tags' in f.cleaned_data:
+                        timeIn = f.cleaned_data['time']
+                        video = d.video_set.create(time=timeIn, start=addSec(timeIn, -10), end=addSec(timeIn, 8))
+                        # Tags
+                        for tag in f.cleaned_data['tags'].split(","):
+                            video.tag_set.create(tag=tag)
+                        '''v = video.save(commit=False)
+                        v.demo_id = d.id
+                        v.start = addSec(v.time, -10)
+                        v.end = addSec(v.time, 8)
+                        v.save()'''
         else:
             return render_to_response('q3demotube/add_demo.html', { 'demoForm':demoForm, 'videoForm':videoForm,
                                                                     'MEDIA_URL': settings.MEDIA_URL})
@@ -102,7 +100,7 @@ def edit_time(request, video_id=0):
     video = Video.objects.get(pk=video_id)
     start = addSec(video.time, -15)
 
-    if request.POST:
+    if request.method == "POST":
         timeForm = VideoTimeForm(request.POST, instance=video)
         if timeForm.is_valid():
             timeForm.save()
