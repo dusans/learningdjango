@@ -44,6 +44,15 @@ class Video(models.Model):
         except:
             return 0
 
+    def set_tags(self, tags):
+        for t in self.tag_set.all():
+            t.delete()
+        for tag in tags.split(","):
+            self.tag_set.create(tag=tag.strip())
+
+    def tags(self):
+        return ", ".join([t.tag for t in self.tag_set.all()])
+
 class Images(models.Model):
     video = models.ForeignKey(Video)
     image = models.ImageField(upload_to='q3/images')
