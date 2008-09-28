@@ -28,7 +28,8 @@ def add_demo(request):
                 if f.is_valid():
                     if 'time' in f.cleaned_data and 'tags' in f.cleaned_data:
                         name, timeIn = f.cleaned_data['name'], f.cleaned_data['time']
-                        video = d.video_set.create(name=name, time=timeIn, start=addSec(timeIn, -10), end=addSec(timeIn, 8))
+                        start, end = addSec(timeIn, -10), addSec(timeIn, 8)
+                        video = d.video_set.create(name=name, time=timeIn, start=start, end=end, duration=addSec(end, - getSec(start)))
                         # Tags
                         video.set_tags(f.cleaned_data['tags'])
                         #for tag in f.cleaned_data['tags'].split(","):
@@ -52,12 +53,12 @@ def demo_view(request, demo_id):
         demoEdit = DemoEdit(request.POST, instance=demo)
         if demoEdit.is_valid():
             demoEdit.save()
-        return demo_list(request)
-    else:
-        videos = demo.video_set.all()
-        demoEdit = DemoEdit(instance=demo)
-        return direct_to_template(request, 'q3demotube/demo.html', {'videos': videos,
-                                                            'demo': demo, 'demoEdit': demoEdit})
+            return demo_list(request)
+
+    videos = demo.video_set.all()
+    demoEdit = DemoEdit(instance=demo)
+    return direct_to_template(request, 'q3demotube/demo.html', {'videos': videos,
+                                                        'demo': demo, 'demoEdit': demoEdit})
 
 @login_required
 def delete_demo(request, object_id):
@@ -70,9 +71,10 @@ def delete_video(request, object_id):
     if video:
         return delete_object(request, object_id=object_id, model=Video, post_delete_redirect='/q3demotube/demo/%s/' % video.demo.id)
 
-def videos(request, page_number=1):
-    videos = Video.objects.filter(has_video=True).order_by('-time_addet')
-    p = Paginator(videos, 5)
+def videos(request, page_number=1, order_by=0):
+    field = ('-time_addet', '-rate', '-view_count', '-duration')[int(order_by)]
+    videos = Video.objects.filter(has_video=True).order_by(field)
+    p = Paginator(videos, 9)
     return direct_to_template(request, 'q3demotube/videos.html', {'videos': p.page(page_number).object_list,
                                                             'pages': p.num_pages,
                                                             'page_number': int(page_number)})
@@ -80,7 +82,7 @@ def videos(request, page_number=1):
 @login_required
 def my_videos(request, page_number=1):
     videos = Video.objects.filter(has_video=True, demo__user=request.user).order_by('-time_addet')
-    p = Paginator(videos, 5)
+    p = Paginator(videos, 9)
     return direct_to_template(request, 'q3demotube/my_videos.html', {'videos': p.page(page_number).object_list,
                                                             'pages': p.num_pages,
                                                             'page_number': int(page_number)})
@@ -88,8 +90,10 @@ def my_videos(request, page_number=1):
 def video(request, video_id):
     video = Video.objects.get(pk=video_id)
     video.view_set.create(ip=request.META['REMOTE_ADDR'], user_id=request.user.id)
+    video.view_count += 1
+    video.save()
     return direct_to_template(request, 'q3demotube/video.html', {'video': video,
-                                'ratings': range(1,6), 'rated': video.rated()})
+                                'ratings': range(1,6), 'rated': video.rate})
 
 @login_required
 def video_edit(request, video_id):
@@ -108,10 +112,12 @@ def video_edit(request, video_id):
 @login_required
 def rate_video(request):
     if request.POST:
-        video_id, rate = request.POST['object_id'], request.POST['rate']
+        video_id, rate = request.POST['object_id'], int(request.POST['rate'])
         video = Video.objects.get(pk=video_id)
-        if rate in map(str, range(1,11)) and not video.videorating_set.filter(user=request.user.id).count():
+        if rate in range(1,11) and not video.videorating_set.filter(user=request.user.id).count():
             video.videorating_set.create(rate=rate, user_id=request.user.id)
+            video.rate = (video.rate + rate) / 2
+            video.save()
             return HttpResponse("Video has been rated")
         return HttpResponse("Already voted!")
     return HttpResponse("Post Needet!")
@@ -125,14 +131,18 @@ def add_favorite(request):
         return HttpResponse("Favorite addet!")
     return HttpResponse("No!")
 
+@login_required
 def edit_time(request, video_id=0):
-    video = Video.objects.get(pk=video_id)
+    video = Video.objects.get(pk=video_id, demo__user=request.user.id)
     start = addSec(video.time, -15)
 
     if request.method == "POST":
         timeForm = VideoTimeForm(request.POST, instance=video)
         if timeForm.is_valid():
-            timeForm.save()
+            print "Is valid"
+            t = timeForm.save(commit=False)
+            t.duration = addSec(t.end, - getSec(t.start))
+            t.save()
         return demo_view(request, video.demo_id)
     else:
         timeForm = VideoTimeForm({'start': video.start, 'end': video.end})
@@ -142,6 +152,23 @@ def edit_time(request, video_id=0):
     return direct_to_template(request, 'q3demotube/edit_time.html', {'images': images,
                                                             'demo_id': video.demo.id, 'timeForm': timeForm,
                                                             'videoTime': str(video.time), 'video': video})
+
+@login_required
+def add_time(request, demo_id=-1):
+    d = Demo.objects.get(pk=demo_id, user=request.user.id)
+
+    if request.method == "POST":
+        videoForm = VideoForm(request.POST)
+        if videoForm.is_valid():
+            name, timeIn = videoForm.cleaned_data['name'], videoForm.cleaned_data['time']
+            start, end = addSec(timeIn, -10), addSec(timeIn, 8)
+            video = d.video_set.create(name=name, time=timeIn, start=start, end=end, duration=addSec(end, - getSec(start)))
+            # Tags
+            video.set_tags(videoForm.cleaned_data['tags'])
+        return demo_view(request, demo_id)
+    else:
+        videoForm = VideoForm()
+        return direct_to_template(request, 'q3demotube/add_time.html', {'demo_id': demo_id, 'videoForm': videoForm})
 
 @login_required
 def get_images(request, demo_id):

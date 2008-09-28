@@ -10,7 +10,7 @@ def getSec(t):
     return timedelta(hours=t.hour, minutes=t.minute, seconds=t.second).seconds
 
 def addSec(t, n):
-    sec = getSec(t) + n
+    sec = max(1, getSec(t) + n)
     return time(sec / 3600, sec / 60, sec % 60)
 
 q3mmeDir = "c:/Igre/q3/mme"
@@ -41,10 +41,10 @@ def setMME(demo_id, quality, wav, fps, capType="images"):
 
     for video in videos:
         if capType == "images":
-            start = getSec(addSec(video.time, -15)) * 1000
+            start = max(1, getSec(addSec(video.time, -15))) * 1000
             end = getSec(addSec(video.time, 20)) * 1000
         else:
-            start = getSec(video.start) * 1000
+            start = max(1,getSec(video.start)) * 1000
             end = getSec(video.end) * 1000
 
         projectXML = project % (start, end, fps, quality, wav)
@@ -125,7 +125,7 @@ def getMMEVideos(demo_id, capType="videos"):
     # RUN CAPTURE
     #==== ==== ==== ====
     os.chdir("%s" % (q3Dir))
-    run = '''quake3mme.exe +set fs_game "mme" +set r_ignorehwgamma "2" +set mme_renderWidth "540" +set mme_renderHeight "260" +set r_multisample "0" +set r_multisampleNvidia "0" +set r_anisotropy "0" +set fs_extraGames "osp" +exec "low.cfg" +set r_picmip "16" +demolist "%s-demolist.txt"''' % (demo_id)
+    run = '''quake3mme.exe +set fs_game "mme" +set r_ignorehwgamma "2" +set mme_renderWidth "540" +set mme_renderHeight "260" +set r_multisample "0" +set r_multisampleNvidia "0" +set r_anisotropy "0" +exec "low.cfg" +set r_picmip "16" +demolist "%s-demolist.txt"''' % (demo_id)
     print run
     os.system('%s &' % run)
 

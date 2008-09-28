@@ -6,12 +6,12 @@ from django import forms
 class DemoForm(ModelForm):
     class Meta:
         model = Demo
-        exclude = ('user', 'time_addet',)
+        exclude = ('user', 'time_addet', 'view_count', 'rate', 'duration')
 
 class DemoEdit(ModelForm):
     class Meta:
         model = Demo
-        exclude = ('user', 'time_addet', 'demo')
+        exclude = ('user', 'time_addet', 'demo', 'view_count', 'rate', 'duration')
 
 
 class VideoForm(ModelForm):
