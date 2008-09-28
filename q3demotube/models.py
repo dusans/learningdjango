@@ -18,6 +18,9 @@ class Demo(models.Model):
     demo = models.FileField(upload_to='q3demos')
     time_addet = models.DateTimeField(default=datetime.datetime.now)
 
+    def __unicode__(self):
+        return self.name
+
 class Video(models.Model):
     demo = models.ForeignKey(Demo)
     name = models.CharField(max_length=200, blank=True)
@@ -27,22 +30,18 @@ class Video(models.Model):
     time = models.TimeField()
     start = models.TimeField(null=True)
     end = models.TimeField(null=True)
+    duration = models.TimeField(null=True)
     has_images = models.BooleanField()
     has_video = models.BooleanField()
     time_addet = models.DateTimeField(default=datetime.datetime.now)
+    view_count = models.PositiveIntegerField(default=0)
+    rate = models.PositiveIntegerField(default=5)
 
     def __unicode__(self):
-        return "%s - %s - %s" % (self.demo.demo.url, self.name, self.time)
+        return "%s - %s" % (self.name, self.time)
 
     def can_be_captured(self):
         return (self.end.minute * 60 + self.end.second) - (self.start.minute * 60 + self.start.second) <=  30
-
-    def rated(self):
-        try:
-            rates = [vr.rate for vr in self.videorating_set.all()]
-            return round(sum(rates) / float(len(rates)))
-        except:
-            return 0
 
     def set_tags(self, tags):
         for t in self.tag_set.all():
@@ -71,8 +70,15 @@ class Favorite(models.Model):
     user = models.ForeignKey(User)
     video = models.ForeignKey(Video)
 
+    def __unicode__(self):
+        return "%s -> %s" % (self.user.username, self.video.name)
+
 class VideoRating(models.Model):
     user = models.ForeignKey(User)
     video = models.ForeignKey(Video)
     rate = models.IntegerField()
+
+class Test(models.Model):
+    foo = models.IntegerField()
+    view_count = models.PositiveIntegerField()
 
