@@ -7,8 +7,8 @@
 {{ demoEdit.as_p }}
 <input type="Submit" value="Submit"><br/>
 </form>
+</p><br/>
 
-</p>
 <b>Frag List:</b><br/>
 <table border="1">
 <tr>
@@ -43,6 +43,7 @@
 {% endfor %}
 </table>
 <p>
+    <a href="/q3demotube/add_time/{{ demo.id }}/">Add time</a>
     <a href="/q3demotube/get_images/{{ demo.id }}/">Get Images</a>
     <a href="/q3demotube/get_videos/{{ demo.id }}/">Get Videos</a>
 </p>

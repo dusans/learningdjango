@@ -9,11 +9,12 @@
         <a href='/q3demotube/videos/{{ page_number|add:"1" }}/' >Next</a>
         <a href='/q3demotube/videos/{{ pages }}/' >Last</a>
 </p>
+<div id="GLOBAL-left-mainframe-course">
 {% for video in videos  %}
-<p>
-    <b><a href="/q3demotube/video/{{ video.id }}/">Name: {{ video.name }}</a></b> <br/>
-    Demo: {{ video.demo.name }}<br/>
-    <a href="/q3demotube/video/{{ video.id }}/"><img width="220" height="110" src="{{ video.thumbnail.url }}"></a>
-</p>
+    <div class="VIDEOS-1grid-box ">
+        <b><a href="/q3demotube/video/{{ video.id }}/">{{ video.name|slice:":32" }}</a></b><br/>
+        <a href="/q3demotube/video/{{ video.id }}/"><img width="220" height="110" src="{{ video.thumbnail.url }}"></a>
+    </div>
 {% endfor %}
+</div>
 {% endblock %}
