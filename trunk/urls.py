@@ -13,11 +13,10 @@ urlpatterns = patterns('',
 
     # Uncomment the next line for to enable the admin:
     (r'^admin/(.*)', admin.site.root),
-
     (r'^polls/', include('polls.urls')),
     (r'^lottery/', include('lottery.urls')),
     (r'^registration/', include('registration.urls')),
-    (r'^login/', include('simpleLogin.urls')),
+    #(r'^login/', include('registration.urls')),
     (r'^loginUser/', include('simpleLogin.urls')),
     (r'^q3demotube/', include('q3demotube.urls')),
     (r'^threadedcomments/', include('threadedcomments.urls')),
