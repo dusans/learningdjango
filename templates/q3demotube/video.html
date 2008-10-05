@@ -1,4 +1,5 @@
 {% extends "q3demotube/baseq3.html" %}
+{% load humanize %}
 
 {% block page_title %}Video{% endblock %}
 {% block content %}
@@ -22,24 +23,26 @@ $(document).ready(function() {
     Time: {{ video.time }} Start: {{ video.start }} End: {{ video.end }}<br/>
     Views: {{ video.view_count }}<br/>
     Description: {{ video.description }}<br/>
+    Cap: <b>{{ video.capture_time|floatformat:2 }}</b> s; Comp: <b>{{ video.compression_time|floatformat:2 }}</b> s => <b>{{ video.capture_time|add:video.compression_time }}</b> s<br/>
+    VideoSize: <b>{{ video.videoFile.size|intcomma }}</b>
 </p>
 
 <div id="starRating" class="rating">&nbsp;</div>
 <a href="#" onclick="add_favorite()">Favorite!</a>
 
 <h3>Comments on This Post:</h3>
-{% get_free_threaded_comment_tree for video as tree %}
+{% get_threaded_comment_tree for video as tree %}
 {% for comment in tree %}
     <div style="margin-left: {{ comment.depth }}em;" class="comment">
-        <a href="{{ comment.website }}">{{ comment.name }}</a> said:<br/>
+        <a href="{{ comment.website }}">{{ comment.user }}</a> said:<br/>
         {% auto_transform_markup comment %}
-        <a id="c{{ comment.id }}" href="javascript:show_reply_form('c{{ comment.id }}','{% get_free_comment_url video comment %}','{{ comment.name }}')">Reply</a>
+        <a id="c{{ comment.id }}" href="javascript:show_reply_form('c{{ comment.id }}','{% get_comment_url video comment %}','{{ comment.name }}')">Reply</a>
     </div>
 {% endfor %}
 <p>Reply to Original:</p>
-<form method="POST" action="{% get_free_comment_url video %}">
+<form method="POST" action="{% get_comment_url video %}">
     <ul>
-        {% get_free_threaded_comment_form as form %}
+        {% get_threaded_comment_form as form %}
         {{ form.as_ul }}
         <li><input type="submit" value="Submit Comment" /></li>
     </ul>

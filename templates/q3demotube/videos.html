@@ -11,7 +11,7 @@
 </p>
 <div id="GLOBAL-left-mainframe-course">
 {% for video in videos  %}
-    <div class="VIDEOS-1grid-box ">
+    <div class="VIDEOS-1grid-box">
         <b><a href="/q3demotube/video/{{ video.id }}/">{{ video.name|slice:":32" }}</a></b><br/>
         <a href="/q3demotube/video/{{ video.id }}/"><img width="220" height="110" src="{{ video.thumbnail.url }}"></a>
     </div>
