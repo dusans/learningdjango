@@ -20,3 +20,21 @@ hr {
 p#menu {
 	margin: 5px;
 }
+
+#GLOBAL-left-mainframe-course {
+	background-repeat:repeat-x;
+	min-height:575px;
+	padding:10px;
+}
+
+
+.VIDEOS-1grid-box {
+	float:left;
+	font-size:12px;
+	height:14em;
+	margin-bottom:20px;
+	margin-left:11px;
+	margin-right:11px;
+	text-align:justify;
+	width:198px;
+}
