@@ -31,6 +31,8 @@ class Video(models.Model):
     start = models.TimeField(null=True)
     end = models.TimeField(null=True)
     duration = models.TimeField(null=True)
+    capture_time = models.FloatField(null=True)
+    compression_time = models.FloatField(null=True)
     has_images = models.BooleanField()
     has_video = models.BooleanField()
     time_addet = models.DateTimeField(default=datetime.datetime.now)
@@ -77,8 +79,4 @@ class VideoRating(models.Model):
     user = models.ForeignKey(User)
     video = models.ForeignKey(Video)
     rate = models.IntegerField()
-
-class Test(models.Model):
-    foo = models.IntegerField()
-    view_count = models.PositiveIntegerField()
 
