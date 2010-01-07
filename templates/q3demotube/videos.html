@@ -1,4 +1,5 @@
 {% extends "q3demotube/baseq3.html" %}
+{% load sorting_tags %}
 
 {% block page_title %}Videos{% endblock %}
 {% block content %}
@@ -9,6 +10,10 @@
         <a href='/q3demotube/videos/{{ page_number|add:"1" }}/' >Next</a>
         <a href='/q3demotube/videos/{{ pages }}/' >Last</a>
 </p>
+<ul id="sorting_list">
+    {% table_header headers 'li' %}
+</ul>
+
 <div id="GLOBAL-left-mainframe-course">
 {% for video in videos  %}
     <div class="VIDEOS-1grid-box">

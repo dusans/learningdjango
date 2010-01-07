@@ -15,7 +15,7 @@ class Demo(models.Model):
     category = models.ForeignKey(Category)
     user = models.ForeignKey(User)
     name = models.CharField(max_length=200, blank=True)
-    demo = models.FileField(upload_to='q3demos')
+    demo = models.FileField(upload_to='q3/demos')
     time_addet = models.DateTimeField(default=datetime.datetime.now)
 
     def __unicode__(self):
@@ -25,7 +25,8 @@ class Video(models.Model):
     demo = models.ForeignKey(Demo)
     name = models.CharField(max_length=200, blank=True)
     videoFile = models.FileField(upload_to='q3/videos')
-    thumbnail = models.ImageField(upload_to='q3/images')
+    thumbnail = models.ImageField(upload_to='q3/thumbnails')
+    bigImage = models.ImageField(upload_to='q3/images', null=True)
     description = models.TextField(blank=True)
     time = models.TimeField()
     start = models.TimeField(null=True)
@@ -38,6 +39,7 @@ class Video(models.Model):
     time_addet = models.DateTimeField(default=datetime.datetime.now)
     view_count = models.PositiveIntegerField(default=0)
     rate = models.PositiveIntegerField(default=5)
+
 
     def __unicode__(self):
         return "%s - %s" % (self.name, self.time)
@@ -53,10 +55,6 @@ class Video(models.Model):
 
     def tags(self):
         return ", ".join([t.tag for t in self.tag_set.all()])
-
-class Images(models.Model):
-    video = models.ForeignKey(Video)
-    image = models.ImageField(upload_to='q3/images')
 
 class Tag(models.Model):
     video = models.ForeignKey(Video)

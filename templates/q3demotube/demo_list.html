@@ -1,17 +1,11 @@
 {% extends "q3demotube/baseq3.html" %}
+{% load sorting_tags %}
 
 {% block page_title %}My Demos{% endblock %}
 {% block content %}
 <table border="1">
 <tr>
-    <th><b>Name</b></th>
-    <th><b>Demo</b></th>
-    <th><b>Category</b></th>
-    <th><b>Date</b></th>
-    <th><b>User</b></th>
-    <th><b>#Frags</b></th>
-    <th><b>#Edit</b></th>
-    <th><b>#Delete</b></th>
+    {% table_header headers 'th' %}
 </tr>
 {% for d in demos  %}
 <tr>

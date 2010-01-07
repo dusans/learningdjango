@@ -86,24 +86,15 @@ def getMMEImages(demo_id, capType="images"):
     #==== ==== ==== ====
     capture = os.listdir('%s/mme/capture/%s-%s' % (q3Dir, demo_id, capType))
 
-    os.chdir("%sq3/images" % (settings.MEDIA_ROOT))
-
-    try:
-        os.mkdir("%s-%s" % (demo_id, capType))
-    except:
-        print "Dir already existes"
-
     for video in videos:
-        for image in capture:
-            if image.startswith('%s.' % video.id):
-                shutil.copy2("%s/capture/%s-%s/%s" % (q3mmeDir, demo_id, capType, image), "%sq3/images/%s-images/%s" % (settings.MEDIA_ROOT, demo_id, image))
-                video.images_set.create(image=File(open("%sq3/images/%s-images/%s" % (settings.MEDIA_ROOT, demo_id, image))))
+        images = filter(lambda x: x.startswith('%s.' % video.id), capture) #[image for image in capture if image]
+        bigImage = Image.new("RGBA", (440 * len(images), 220))
+        for x, i in enumerate(images):
+            bigImage.paste(Image.open("%s/capture/%s-%s/%s" % (q3mmeDir, demo_id, capType, i)), (440 * x, 0))
+            os.remove("%s/capture/%s-%s/%s" % (q3mmeDir, demo_id, capType, i))
+        bigImage.save("%sq3/images/%s.jpg" % (settings.MEDIA_ROOT, video.id), "JPEG")
 
-        for image in capture:
-            if image.startswith('%s.' % video.id):
-                os.remove("%s/capture/%s-%s/%s" % (q3mmeDir, demo_id, capType, image))
-
-    for video in videos:
+        video.bigImage = File(open("%sq3/images/%s.jpg" % (settings.MEDIA_ROOT, video.id)))
         video.has_images = True
         video.save()
 
@@ -158,9 +149,8 @@ def getMMEVideos(demo_id, capType="videos"):
         # THUMBNAIL
         #==== ==== ==== ====
         image = capturedImages[len(capturedImages) / 2]
-        Image.open("%s/capture/%s-%s/%s" % (q3mmeDir, demo_id, capType, image)).save("%sq3/thumbnails/%s.tga" % (settings.MEDIA_ROOT, video.id), "JPEG")
-        #shutil.copy2("%s/capture/%s-%s/%s" % (q3mmeDir, demo_id, capType, image), "%sq3/thumbnails/%s.tga" % (settings.MEDIA_ROOT, video.id))
-        video.thumbnail = "q3/thumbnails/%s.tga" % (video.id)
+        Image.open("%s/capture/%s-%s/%s" % (q3mmeDir, demo_id, capType, image)).save("%sq3/thumbnails/%s.jpg" % (settings.MEDIA_ROOT, video.id), "JPEG")
+        video.thumbnail = "q3/thumbnails/%s.jpg" % (video.id)
 
         #==== ==== ==== ====
         # SAVE
