@@ -12,43 +12,27 @@
  <b>Max video length = 30 sec</b>
 </p>
 
+
+
 {% if video.has_images %}
-    <img align="center" height="440" width="880" id="theImage" src="{{ MEDIA_URL }}q3/images/{{ demo_id }}.{{ images|first|last }}.jpg"/>
+    <div id="imgContainer">
+	   <img src="{{ MEDIA_URL }}q3/images/{{ video.id }}.jpg" alt="140 images to be precise!" />
+    </div>
+
     <div id="navcontainer">
     <ul id="navlist">
     {% for time, i in images %}
-        <li onmouseover="$('img#theImage').attr('src', '{{ MEDIA_URL }}q3/images/{{ demo_id }}-images/{{ video.id }}.{{ i }}.jpg')" id="{{ i }}" onclick="$('input#id_end').val('{{ time }}')" ondblclick="$('input#id_start, #time').val('{{ time }}')">
+        <li onmouseover="$('#imgContainer img').animate({ left: -440 * {{ i }} }, 2)" id="{{ i }}" onclick="$('input#id_end').val('{{ time }}')" ondblclick="$('input#id_start, #time').val('{{ time }}')">
+
+		<!-- $('img#theImage').attr('src', '{{ MEDIA_URL }}q3/images/{{ demo_id }}-images/{{ video.id }}.{{ i }}.jpg') -->
         {% ifequal videoTime time %}
-            <b>|</b>
+            <b>||</b>
         {% endifequal  %}
         </li>
     {% endfor %}
     </ul>
     </div>
 {% endif %}
-<style type="text/css">
-    #navlist li
-    {
-        display: inline;
-        list-style-type: none;
-
-        height:72px;
-        width:4px;
-
-        padding-right: 0px;
-        line-height:14px;
-        margin:0px;
-
-        background:#FFFFFF none repeat scroll 0 0;
-        border:1px solid #444444;
-        color:#000000;
-        float:left;
-        font-size:8px;
-        text-align:center;
-        text-decoration:none;
-        align:center;
-    }
-</style>
 {% endblock %}
 
 

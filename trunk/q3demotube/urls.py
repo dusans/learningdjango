@@ -13,7 +13,6 @@ video_dict = {
 urlpatterns = patterns('',
     (r'^videos/$', 'q3demotube.views.videos'),
     (r'^videos/(?P<page_number>\d+)/$', 'q3demotube.views.videos'),
-    (r'^videos/(?P<page_number>\d+)/(?P<order_by>\d+)/$', 'q3demotube.views.videos'),
     (r'^my_videos/$', 'q3demotube.views.my_videos'),
     (r'^my_videos/(?P<page_number>\d+)/$', 'q3demotube.views.my_videos'),
     (r'^video/(?P<video_id>\d+)/$', 'q3demotube.views.video'),

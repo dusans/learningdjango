@@ -43,7 +43,7 @@ MEDIA_ROOT = 'c:/LightTPD/htdocs/'
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
-MEDIA_URL = 'http://212.235.178.93/' #89.212.213.217 212.235.178.93
+MEDIA_URL = 'http://192.168.1.2/' #89.212.213.217 212.235.178.93
 
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
@@ -61,8 +61,8 @@ TEMPLATE_LOADERS = (
 )
 
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'dusan.smitran@gmail.com'
-EMAIL_HOST_PASSWORD = ''
+EMAIL_HOST_USER = 'q3demotube@gmail.com'
+EMAIL_HOST_PASSWORD = 'q3demotube24'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
@@ -73,7 +73,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.i18n',
     'django.core.context_processors.media',
     'django.core.context_processors.request',
-
 )
 
 MIDDLEWARE_CLASSES = (
@@ -103,10 +102,13 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.admin',
+    'django.contrib.humanize',
     'polls',
     'lottery',
     'registration',
-    'simpleLogin',
     'q3demotube',
     'threadedcomments',
+    'django_evolution',
+    'queue',
+    'common',
 )

@@ -10,6 +10,7 @@ from django.views.generic.simple import direct_to_template
 from django.conf import settings
 from q3demotube.q3demo import addSec, getSec, getMMEImages, getMMEVideos
 from django.views.generic.create_update import delete_object
+from common.SortHeaders import SortHeaders
 
 @login_required
 def add_demo(request):
@@ -43,8 +44,13 @@ def add_demo(request):
 
 @login_required
 def demo_list(request):
-    demos = Demo.objects.filter(user=request.user).order_by('-time_addet')
-    return direct_to_template(request, 'q3demotube/demo_list.html', {'demos': demos})
+    LIST_HEADERS = [("Name", "name"),  ("Demo", "demo"),  ("Category", "category__name"),
+                        ("Date", "time_addet"),  ("User", "user__username"),  ("#Frags", None),
+                        ("#Edit", None),  ("#Delete", None)]
+
+    sort_headers = SortHeaders(request, LIST_HEADERS)
+    demos = Demo.objects.filter(user=request.user).order_by(sort_headers.get_order_by())
+    return direct_to_template(request, 'q3demotube/demo_list.html', {'demos': demos, 'headers': list(sort_headers.headers())})
 
 @login_required
 def demo_view(request, demo_id):
@@ -71,13 +77,17 @@ def delete_video(request, object_id):
     if video:
         return delete_object(request, object_id=object_id, model=Video, post_delete_redirect='/q3demotube/demo/%s/' % video.demo.id)
 
-def videos(request, page_number=1, order_by=0):
-    field = ('-time_addet', '-rate', '-view_count', '-duration')[int(order_by)]
-    videos = Video.objects.filter(has_video=True).order_by(field)
+def videos(request, page_number=1):
+    LIST_HEADERS = [("name", "name"), ("duration", "duration"), ("time_addet", "time_addet"),
+                    ("view_count", "view_count"), ("rate", "rate"), ("capture_time", "capture_time")]
+
+    sort_headers = SortHeaders(request, LIST_HEADERS)
+    videos = Video.objects.filter(has_video=True).order_by(sort_headers.get_order_by())
     p = Paginator(videos, 9)
     return direct_to_template(request, 'q3demotube/videos.html', {'videos': p.page(page_number).object_list,
-                                                            'pages': p.num_pages,
-                                                            'page_number': int(page_number)})
+                                'pages': p.num_pages,
+                                'page_number': int(page_number), 'headers': list(sort_headers.headers())})
+
 
 @login_required
 def my_videos(request, page_number=1):
@@ -183,3 +193,4 @@ def get_videos(request, demo_id):
     if demo.video_set.filter(has_video=False).count():
         getMMEVideos(demo_id)
     return demo_view(request, demo_id)
+

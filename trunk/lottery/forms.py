@@ -10,3 +10,4 @@ class FilterDraw(forms.Form):
 class LuckyForm(forms.Form):
     lucky = forms.CharField(required=False)
     check = forms.CharField()
+    #foo = forms.ModelChoiceField()
