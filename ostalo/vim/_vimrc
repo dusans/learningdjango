@@ -5,7 +5,7 @@ colorscheme wombat
 set guifont=Consolas:h10
 autocmd FileType python set omnifunc=pythoncomplete#Complete
 behave mswin
-chdir c:\dev
+chdir d:\dev
 
 set lines=40 columns=150
 set guioptions-=T 
@@ -25,15 +25,14 @@ map <A-i> :PyInteractiveREPL<CR>
 " :PyInteractiveEval execfile('%')<CR>
 map <A-e> :exe ":PyInteractiveEval " execfile('%')"<CR>
 
-map <F3> :NERDTree<CR>
-map <F4> :NERDTreeClose<CR>
+map <F3> :NERDTreeToggle<CR>
 let NERDTreeIgnore=['\.vim$', '\.pyc$', '\~$']
 
 " Map ctrl-movement keys to window switching
 map <C-k> <C-w><Up>
 map <C-j> <C-w><Down>
-"map <C-l> <C-w><Right>
-"map <C-h> <C-w><Left>
+map <A-l> <C-w><Right>
+map <A-h> <C-w><Left>
 
 "":map <C-U> <C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y>
 :map <C-D> <C-E><C-E><C-E><C-E><C-E><C-E><C-E><C-E><C-E><C-E><C-E><C-E><C-E><C-E><C-E><C-E>
@@ -49,6 +48,11 @@ map <C-Tab> :bnext<cr>
 map <C-S-Tab> :bprevious<cr>
 
 map <C-w> :close<CR>
+
+" ------------------
+" DB
+
+let g:dbext_default_profile_PG = 'type=PGSQL:user=postgres:passwd=xgoxgo24:host=localhost'
 
 set diffexpr=MyDiff()
 function MyDiff()
