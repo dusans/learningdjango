@@ -5,7 +5,10 @@ colorscheme wombat
 set guifont=Consolas:h10
 autocmd FileType python set omnifunc=pythoncomplete#Complete
 behave mswin
-chdir d:\dev\mynews
+chdir c:\dev
+
+set lines=40 columns=150
+set guioptions-=T 
 
 set expandtab
 set textwidth=79
@@ -29,14 +32,23 @@ let NERDTreeIgnore=['\.vim$', '\.pyc$', '\~$']
 " Map ctrl-movement keys to window switching
 map <C-k> <C-w><Up>
 map <C-j> <C-w><Down>
-map <C-l> <C-w><Right>
-map <C-h> <C-w><Left>
+"map <C-l> <C-w><Right>
+"map <C-h> <C-w><Left>
+
+"":map <C-U> <C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y>
+:map <C-D> <C-E><C-E><C-E><C-E><C-E><C-E><C-E><C-E><C-E><C-E><C-E><C-E><C-E><C-E><C-E><C-E>
+
+
+" Using tabs:
+map  <C-l> :tabn<CR>
+map  <C-h> :tabp<CR>
+map  <C-n> :tabnew<CR>
 
 " Switch to alternate file
 map <C-Tab> :bnext<cr>
 map <C-S-Tab> :bprevious<cr>
 
-map <A-w> :close<CR>
+map <C-w> :close<CR>
 
 set diffexpr=MyDiff()
 function MyDiff()
