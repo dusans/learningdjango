@@ -1,6 +1,0 @@
-dbext history, <enter> or dbl-click to execute, or [q] to quit (history size:50)
-1. SELECT  *@@@FROM    PAGE P;
-2. select * from PAGE where page_id < 2
-3. SELECT  *   FROM PAGE LIMIT 10
-4. select * from PAGE
-5. SELECT  *   FROM PAGE
