@@ -1,3 +1,4 @@
+set encoding=utf-8
 set nocompatible
 source $VIMRUNTIME/vimrc_example.vim
 source $VIMRUNTIME/mswin.vim
@@ -5,18 +6,25 @@ colorscheme wombat
 set guifont=Consolas:h10
 autocmd FileType python set omnifunc=pythoncomplete#Complete
 behave mswin
-chdir d:\dev
+chdir c:\dev
+source workspace.vim
 
 set lines=40 columns=150
 set guioptions-=T 
 
 set expandtab
-set textwidth=79
 set tabstop=8
 set softtabstop=4
 set shiftwidth=4
 set autoindent
 :syntax on
+
+" set search to ignore case, but only if u start to use mix case
+set ignorecase
+set smartcase
+
+
+
 
 " :cd %:p:h\
 map <F2> :w\|!python %<CR>
@@ -25,14 +33,17 @@ map <A-i> :PyInteractiveREPL<CR>
 " :PyInteractiveEval execfile('%')<CR>
 map <A-e> :exe ":PyInteractiveEval " execfile('%')"<CR>
 
-map <F3> :NERDTreeToggle<CR>
+map <F3> :TlistToggle<CR>
+map <F4> :NERDTreeToggle<CR>
 let NERDTreeIgnore=['\.vim$', '\.pyc$', '\~$']
 
 " Map ctrl-movement keys to window switching
-map <C-k> <C-w><Up>
-map <C-j> <C-w><Down>
-map <A-l> <C-w><Right>
-map <A-h> <C-w><Left>
+"map <C-k> <C-w><Up>
+"map <C-j> <C-w><Down>
+"map <C-l> <C-w><Right>
+"map <C-h> <C-w><Left>
+map <C-k> <C-w><Right>
+map <C-j> <C-w><Left>
 
 "":map <C-U> <C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y>
 :map <C-D> <C-E><C-E><C-E><C-E><C-E><C-E><C-E><C-E><C-E><C-E><C-E><C-E><C-E><C-E><C-E><C-E>
@@ -47,12 +58,12 @@ map  <C-n> :tabnew<CR>
 map <C-Tab> :bnext<cr>
 map <C-S-Tab> :bprevious<cr>
 
-map <C-w> :close<CR>
+map <A-w> :close<CR>
+"map <C-S-w> :close!<CR>
 
-" ------------------
-" DB
+map <Tab> <C-w><C-w><cr>
 
-let g:dbext_default_profile_PG = 'type=PGSQL:user=postgres:passwd=xgoxgo24:host=localhost'
+map <F12> :mksession! c:\dev\workspace.vim<CR>
 
 set diffexpr=MyDiff()
 function MyDiff()
@@ -80,3 +91,8 @@ function MyDiff()
 endfunction
 
 
+" set stat it should break lines auto if more then textwidth var
+set textwidth=79
+set formatoptions+=t
+
+au! BufRead,BufNewFile *.json set filetype=json 
