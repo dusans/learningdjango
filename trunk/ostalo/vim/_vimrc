@@ -1,17 +1,18 @@
+" -----------------------
+" main
+" -----------------------
 set encoding=utf-8
 set nocompatible
 source $VIMRUNTIME/vimrc_example.vim
 source $VIMRUNTIME/mswin.vim
+
+" visual
 colorscheme wombat
 set guifont=Consolas:h10
-autocmd FileType python set omnifunc=pythoncomplete#Complete
-behave mswin
-chdir c:\dev
-source workspace.vim
-
 set lines=40 columns=150
 set guioptions-=T 
 
+" tabulator settings
 set expandtab
 set tabstop=8
 set softtabstop=4
@@ -23,9 +24,13 @@ set autoindent
 set ignorecase
 set smartcase
 
-
-
-
+" -----------------------
+" python
+" -----------------------
+autocmd FileType python set omnifunc=pythoncomplete#Complete
+behave mswin
+chdir c:\dev
+source workspace.vim
 " :cd %:p:h\
 map <F2> :w\|!python %<CR>
 map <A-i> :PyInteractiveREPL<CR>
@@ -33,8 +38,10 @@ map <A-i> :PyInteractiveREPL<CR>
 " :PyInteractiveEval execfile('%')<CR>
 map <A-e> :exe ":PyInteractiveEval " execfile('%')"<CR>
 
+" -----------------------
+" navigate
+" -----------------------
 map <F3> :TagbarToggle<CR>
-nmap <F8> :TagbarToggle<CR> 
 map <F4> :NERDTreeToggle<CR>
 let NERDTreeIgnore=['\.vim$', '\.pyc$', '\~$']
 
@@ -49,23 +56,37 @@ map <C-j> <C-w><Left>
 "":map <C-U> <C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y><C-Y>
 :map <C-D> <C-E><C-E><C-E><C-E><C-E><C-E><C-E><C-E><C-E><C-E><C-E><C-E><C-E><C-E><C-E><C-E>
 
-
-" Using tabs:
+" navigate between tabs:
 map  <C-l> :tabn<CR>
 map  <C-h> :tabp<CR>
 map  <C-n> :tabnew<CR>
 
-" Switch to alternate file
+" navigate buffers with Tab
 map <C-Tab> :bnext<cr>
 map <C-S-Tab> :bprevious<cr>
 
+" close window
 map <A-w> :close<CR>
 "map <C-S-w> :close!<CR>
 
 map <Tab> <C-w><C-w><cr>
 
+" -----------------------
+" other
+" -----------------------
+" save workspace bind
 map <F12> :mksession! c:\dev\workspace.vim<CR>
 
+" set stat it should break lines auto if more then textwidth var
+set textwidth=79
+set formatoptions+=t
+
+" json
+au! BufRead,BufNewFile *.json set filetype=json 
+
+" -----------------------
+" diff
+" -----------------------
 set diffexpr=MyDiff()
 function MyDiff()
   let opt = '-a --binary '
@@ -92,8 +113,3 @@ function MyDiff()
 endfunction
 
 
-" set stat it should break lines auto if more then textwidth var
-set textwidth=79
-set formatoptions+=t
-
-au! BufRead,BufNewFile *.json set filetype=json 
