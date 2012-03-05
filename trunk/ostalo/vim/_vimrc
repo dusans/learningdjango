@@ -33,7 +33,8 @@ map <A-i> :PyInteractiveREPL<CR>
 " :PyInteractiveEval execfile('%')<CR>
 map <A-e> :exe ":PyInteractiveEval " execfile('%')"<CR>
 
-map <F3> :TlistToggle<CR>
+map <F3> :TagbarToggle<CR>
+nmap <F8> :TagbarToggle<CR> 
 map <F4> :NERDTreeToggle<CR>
 let NERDTreeIgnore=['\.vim$', '\.pyc$', '\~$']
 
