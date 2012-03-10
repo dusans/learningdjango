@@ -178,6 +178,7 @@ class PyREPL(object):
 
     def eval_file(self, filename):
         "Evaluates the file at the given path."
+        vim.command('<C-w><Right>')
         try:
             with open(filename) as file_:
                 self.redirect_stdout()
@@ -252,7 +253,7 @@ fun! s:ToggleREPL()
 endfun
 
 fun! s:StartREPL()
-    enew
+    rightbelow vnew
     setl buftype=nofile
     setl ft=python
     setl noai nocin nosi inde=
@@ -268,7 +269,9 @@ endfun
 
 fun! s:StartREPLWithFile()
     let s:filename = expand('%')
-    call s:StartREPL()
+    if !exists("s:repl_started")
+        call s:StartREPL()
+    endif
     python pyrepl.eval_file(vim.eval("s:filename"))
 endfun
 
