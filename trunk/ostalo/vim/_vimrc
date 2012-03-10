@@ -29,7 +29,7 @@ set smartcase
 " -----------------------
 autocmd FileType python set omnifunc=pythoncomplete#Complete
 behave mswin
-chdir c:\dev
+chdir d:\dev
 source workspace.vim
 " :cd %:p:h\
 map <F2> :w\|!python %<CR>
@@ -75,7 +75,8 @@ map <Tab> <C-w><C-w><cr>
 " other
 " -----------------------
 " save workspace bind
-map <F12> :mksession! c:\dev\workspace.vim<CR>
+map <F12> :mksession! d:\dev\workspace.vim<CR>
+let g:dbext_default_profile_ODBC_mynews = 'type=ODBC:user=postgres:passwd=xgoxgo24:dsnname=mynews'
 
 " set stat it should break lines auto if more then textwidth var
 set textwidth=79
