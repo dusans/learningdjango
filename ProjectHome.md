@@ -1,0 +1,1 @@
+Learning django for the first time. Hope i will learn it as soon as possible.
